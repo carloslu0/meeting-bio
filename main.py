@@ -185,8 +185,9 @@ def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_c
 # Prompts
 response = {
     'Meeting Bio' : """
-        Your goal is to generate a 1 page summary about them
+        Your goal is to generate a 2 page summary about them
         Please respond with a few short paragraphs that would prepare someone to talk to this person
+        On the second page, transform the LinkedIn data that you have into a list of bullet points about the person.
     """,
     'Client Data' : """
         Your goal is to generate a 1 page summary about them
