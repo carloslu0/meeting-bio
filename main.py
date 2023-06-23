@@ -154,12 +154,11 @@ def split_text(user_information):
 
 #Function to scrape LI data via Proxycurl
 def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_cache='if-present',
-                      skills='exclude', inferred_salary='exclude', personal_email='exclude',
-                      personal_contact_number='exclude', twitter_profile_id='exclude',
-                      facebook_profile_id='exclude', github_profile_id='exclude', extra='exclude'):
-    st.write("Getting LinkedIn Data...")
-    url = 'https://nubela.co/proxycurl/api/v2/linkedin'
-    headers = {'Authorization': f'Bearer {api_key}'}
+                      skills='include', inferred_salary='include', personal_email='include',
+                      personal_contact_number='include', twitter_profile_id='include',
+                      facebook_profile_id='include', github_profile_id='include', extra='include'):
+    api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin'
+    header_dic = {'Authorization': 'Bearer ' + api_key}
     params = {
         'url': linkedin_url,
         'fallback_to_cache': fallback_to_cache,
@@ -171,10 +170,10 @@ def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_c
         'twitter_profile_id': twitter_profile_id,
         'facebook_profile_id': facebook_profile_id,
         'github_profile_id': github_profile_id,
-        'extra': extra
+        'extra': extra,
     }
-
-    response = requests.get(url, headers=headers, params=params)
+    
+    response = requests.get(api_endpoint, params=params, headers=header_dic)
     
     if response.status_code == 200:
         json_data = response.json()
