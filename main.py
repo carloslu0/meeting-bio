@@ -262,7 +262,7 @@ if output_type == "Meeting Bio":
 #    crunchbase_url = st.text_input(label="Crunchbase Profile", placeholder="https://crunchbase.com", key="crunchbase_url_input")
 
     person_name = st.text_input(label="Person's Name",  placeholder="Ex: Chris York", key="persons_name")
-    linkedin_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
+    linkedin_profile_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
     youtube_videos = st.text_input(label="YouTube URLs (Use commas to seperate videos)",  placeholder="Ex: https://www.youtube.com/watch?v=c_hO_fjmMnk, https://www.youtube.com/watch?v=c_hO_fjmMnk", key="youtube_user_input")
     webpages = st.text_input(label="Web Page URLs (Use commas to seperate urls. Sites that require sign-in to view user data like LinkedIn, Crunchbase don't work yet. Must include https://)",  placeholder="https://chrisyork.co/", key="webpage_user_input")
 
@@ -313,7 +313,7 @@ if output_type == "Meeting Bio":
     #    user_tweets = get_original_tweets(twitter_handle) if twitter_handle else ""
         video_text = get_content_from_urls(parse_urls(youtube_videos), get_video_transcripts) if youtube_videos else ""
         website_data = get_content_from_urls(parse_urls(webpages), pull_from_website) if webpages else ""
-        linkedin_data = get_linkedin_data(PROXYCURL_API_KEY, linkedin_url) if linkedin_url else ""
+        linkedin_data = get_linkedin_data(api_key=PROXYCURL_API_KEY, linkedin_url=linkedin_profile_url) if linkedin_profile_url else ""
    
     #    user_information = "\n".join([user_tweets, video_text, website_data])
       
