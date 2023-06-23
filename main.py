@@ -21,17 +21,24 @@ from langchain.document_loaders import YoutubeLoader
 # !pip install youtube-transcript-api
 
 # Environment Variables
+import json
+import requests
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 # Get your API keys set
 TWITTER_API_KEY = os.getenv('TWITTER_API_KEY')
 TWITTER_API_SECRET = os.getenv('TWITTER_API_SECRET')
 TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
 TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
-OPENAI_API_KEY = st.secrets["openai_api_key"]
+if "openai_api_key" in st.secrets:
+    OPENAI_API_KEY = st.secrets["openai_api_key"]
+else:
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+PROXYCURL_API_KEY = os.getenv('PROXYCURL_API_KEY')
 
 # Load up your LLM
 def load_LLM(openai_api_key):
@@ -142,6 +149,37 @@ def split_text(user_information):
 
     return docs
 
+#Function to scrape LI data via Proxycurl
+def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_cache='if-present',
+                      skills='exclude', inferred_salary='exclude', personal_email='exclude',
+                      personal_contact_number='exclude', twitter_profile_id='exclude',
+                      facebook_profile_id='exclude', github_profile_id='exclude', extra='exclude'):
+    st.write("Getting LinkedIn Data...")
+    url = 'https://nubela.co/proxycurl/api/v2/linkedin'
+    headers = {'Authorization': f'Bearer {api_key}'}
+    params = {
+        'url': linkedin_url,
+        'fallback_to_cache': fallback_to_cache,
+        'use_cache': use_cache,
+        'skills': skills,
+        'inferred_salary': inferred_salary,
+        'personal_email': personal_email,
+        'personal_contact_number': personal_contact_number,
+        'twitter_profile_id': twitter_profile_id,
+        'facebook_profile_id': facebook_profile_id,
+        'github_profile_id': github_profile_id,
+        'extra': extra
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+    
+    if response.status_code == 200:
+        json_data = response.json()
+        data_str = json.dumps(json_data)
+        return data_str
+    else:
+        raise Exception(f'Request failed with status code {response.status_code}: {response.text}')
+
 # Prompts
 response = {
     'Meeting Bio' : """
@@ -222,6 +260,7 @@ if output_type == "Meeting Bio":
 #    crunchbase_url = st.text_input(label="Crunchbase Profile", placeholder="https://crunchbase.com", key="crunchbase_url_input")
 
     person_name = st.text_input(label="Person's Name",  placeholder="Ex: Chris York", key="persons_name")
+    linkedin_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
     youtube_videos = st.text_input(label="YouTube URLs (Use commas to seperate videos)",  placeholder="Ex: https://www.youtube.com/watch?v=c_hO_fjmMnk, https://www.youtube.com/watch?v=c_hO_fjmMnk", key="youtube_user_input")
     webpages = st.text_input(label="Web Page URLs (Use commas to seperate urls. Sites that require sign-in to view user data like LinkedIn, Crunchbase don't work yet. Must include https://)",  placeholder="https://chrisyork.co/", key="webpage_user_input")
 
@@ -256,7 +295,7 @@ if output_type == "Meeting Bio":
      #       st.warning('Please provide links to parse', icon="⚠️")
      #       st.stop()
         
-        if not (twitter_handle or youtube_videos or webpages):
+        if not (linkedin_url or youtube_videos or webpages):
             st.warning('Please provide links to parse', icon="⚠️")
             st.stop()
 
@@ -272,9 +311,11 @@ if output_type == "Meeting Bio":
     #    user_tweets = get_original_tweets(twitter_handle) if twitter_handle else ""
         video_text = get_content_from_urls(parse_urls(youtube_videos), get_video_transcripts) if youtube_videos else ""
         website_data = get_content_from_urls(parse_urls(webpages), pull_from_website) if webpages else ""
-
+        linkedin_data = get_linkedin_data(PROXYCURL_API_KEY, linkedin_url) if linkedin_url else ""
+   
     #    user_information = "\n".join([user_tweets, video_text, website_data])
-        user_information = "\n".join([video_text, website_data])
+      
+        user_information = "\n".join([linkedin_data, video_text, website_data])
 
         user_information_docs = split_text(user_information)
 
