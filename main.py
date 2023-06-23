@@ -297,7 +297,7 @@ if output_type == "Meeting Bio":
      #       st.warning('Please provide links to parse', icon="⚠️")
      #       st.stop()
         
-        if not (linkedin_url or youtube_videos or webpages):
+        if not (linkedin_profile_url or youtube_videos or webpages):
             st.warning('Please provide links to parse', icon="⚠️")
             st.stop()
 
