@@ -38,7 +38,10 @@ if "openai_api_key" in st.secrets:
     OPENAI_API_KEY = st.secrets["openai_api_key"]
 else:
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-PROXYCURL_API_KEY = os.getenv('PROXYCURL_API_KEY')
+if "proxycurl_api_key" in st.secrets:
+    PROXYCURL_API_KEY = st.secrets["proxycurl_api_key"]
+else:
+    PROXYCURL_API_KEY = os.getenv('PROXYCURL_API_KEY')
 
 # Load up your LLM
 def load_LLM(openai_api_key):
