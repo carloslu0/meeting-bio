@@ -360,7 +360,7 @@ elif output_type == 'Meeting Bio':
 
 
         st.markdown(f"##### 📖 Summary")
-        st.write(data_dict['Summary'])
+        st.write(data_dict["summary"])
 
         # Add the corresponding links
         st.markdown(f"##### 🌐 Links")
