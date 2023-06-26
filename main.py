@@ -334,9 +334,16 @@ elif output_type == 'Meeting Bio':
 
         st.markdown(f"### Output:")
         data_dict = json.loads(linkedin_data)
+        col1, col2 = st.columns(2)
 
         st.markdown(f"##### 📋 Basic Information")
-        st.write(f"Name")
+
+        with col1:
+            st.write(f"Name")
+
+        with col2:
+            st.image(data_dict["profile_pic_url"])
+
         st.write(data_dict["full_name"])
         st.write(f"Email")
         st.write(data_dict["email"])
