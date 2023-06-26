@@ -223,44 +223,36 @@ Do not make anything up, only use information which is in the person's context
 """
 combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=["text", "persons_name", "response"])
 
-# Start Of Streamlit page
+# Set the Streamlit page configuration
 st.set_page_config(page_title="Meeting Bio Generator", page_icon=":robot:")
 
-# Start Sidebar Information
-
-#Build sidebar
+# Build the sidebar
 add_sidebar = st.sidebar.title("Meeting Bio Generator")
+output_type = st.sidebar.selectbox('Choose section', ('Personal Information', 'Meeting Bio'))
 
-with st.sidebar:
-     st.markdown("Have a meeting coming up? Use this tool to help you prepare. \
-                Generate a meeting bio or client profile based off of their personal links or topics they've recently tweeted or talked about.")
+# Initialize session state variables if not already set
+if 'personal_info' not in st.session_state:
+    st.session_state['personal_info'] = {}
 
-with st.sidebar:
-     output_type = st.selectbox('Meeting Bio', ('Meeting Bio', "TK: Client Data"))
+# Personal Information section
+if output_type == 'Personal Information':
+    st.markdown("# Personal Information")
 
-with st.sidebar:
-     st.markdown("This tool is powered by [BeautifulSoup](https://beautiful-soup-4.readthedocs.io/en/latest/#) [markdownify](https://pypi.org/project/markdownify/) [Tweepy](https://docs.tweepy.org/en/stable/api.html), [LangChain](https://langchain.com/) and [OpenAI](https://openai.com) \
-                \n\n\n\n\nForked from [@GregKamradt's](https://twitter.com/GregKamradt) repo on [LLM Assisted Research Prep](https://github.com/gkamradt/llm-interview-research-assistant/tree/main). Check out his amazing Youtube channel [here](https://www.youtube.com/@DataIndependent).")
+    # Input fields for personal information with session state
+    personal_info_keys = [
+        'name', 'email', 'linkedin_url', 'current_city', 'angellist_url', 'company_name',
+        'company_linkedin_url', 'other_website_urls', 'undergraduate_school_name',
+        'undergraduate_school_location', 'undergraduate_school_year',
+        'undergraduate_school_area_of_study', 'undergraduate_school_linkedin',
+        'highschool_name', 'highschool_location', 'highschool_year', 'youtube_videos'
+    ]
 
-# End Sidebar Information
+    for key in personal_info_keys:
+        st.session_state.personal_info[key] = st.text_input(key.capitalize().replace('_', ' '))
 
-if output_type == "Meeting Bio":
-#st.markdown("## :older_man: Larry The LLM Researcher")
-
-# Collect information about the person you want to research
-
-#col1,col2=st.columns(2)
-#with col1:
-#     person_name = st.text_input(label="Person's Name",  placeholder="Ex: Chris York", key="persons_name")
-
-#with col2:
-#    twitter_handle = st.text_input(label="Twitter Username",  placeholder="@chrisyork", key="twitter_user_input")
-
-#with col1:
-#    linkedin_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
-
-#with col2:
-#    crunchbase_url = st.text_input(label="Crunchbase Profile", placeholder="https://crunchbase.com", key="crunchbase_url_input")
+# Meeting Bio section
+elif output_type == 'Meeting Bio':
+    st.markdown("# Meeting Bio")
 
     person_name = st.text_input(label="Person's Name",  placeholder="Ex: Chris York", key="persons_name")
     linkedin_profile_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
@@ -340,8 +332,34 @@ if output_type == "Meeting Bio":
                     "response" : response[output_type]
                     })
 
-        st.markdown(f"#### Output:")
+        st.markdown(f"### Output:")
+        data_dict = json.loads(linkedin_data)
+
+        st.markdown(f"##### 📋 Basic Information")
+        st.write(f"Name")
+        st.write(data_dict["full_name"])
+        st.write(f"Email")
+        st.write(data_dict["email"])
+        st.write(f"Location")
+        st.write(data_dict["city"] + ", " + data_dict["state"] + ", " + data_dict["country"])
+
+
+        st.markdown(f"##### 🌐 Links")
+        # Add the corresponding links
+        st.markdown(f"###### Personal")
+
+        st.write(f"LinkedIn")
+        st.write(f"Twitter")
+        st.write(f"Company")
+
+        st.write(f"Company Site")
+        st.write(f"Company LinkedIn")
+        st.write(f"Pave Twitter")
+
+        st.write(f"📖 Bio")
+        st.write(f"Twitter Bio")
+        st.write(data_dict["twitter_bio"])
+        st.write(f"LinkedIn Bio")
+        st.write(data_dict["linkedin_bio"])
         st.write(output['output_text'])
 
-if output_type == "TK: Client Data":
-    st.write("# TK: Client Data")
