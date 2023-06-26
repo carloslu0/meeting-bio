@@ -254,10 +254,15 @@ if output_type == 'Personal Information':
 elif output_type == 'Meeting Bio':
     st.markdown("# Meeting Bio")
 
-    person_name = st.text_input(label="Person's Name",  placeholder="Ex: Chris York", key="persons_name")
-    linkedin_profile_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
-    youtube_videos = st.text_input(label="YouTube URLs (Use commas to seperate videos)",  placeholder="Ex: https://www.youtube.com/watch?v=c_hO_fjmMnk, https://www.youtube.com/watch?v=c_hO_fjmMnk", key="youtube_user_input")
-    webpages = st.text_input(label="Web Page URLs (Use commas to seperate urls. Sites that require sign-in to view user data like LinkedIn, Crunchbase don't work yet. Must include https://)",  placeholder="https://chrisyork.co/", key="webpage_user_input")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        person_name = st.text_input(label="Person's Name",  placeholder="Ex: Chris York", key="persons_name")
+        linkedin_profile_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
+
+    with col2:    
+        youtube_videos = st.text_input(label="YouTube URLs (Use commas to seperate videos)",  placeholder="Ex: https://www.youtube.com/watch?v=c_hO_fjmMnk, https://www.youtube.com/watch?v=c_hO_fjmMnk", key="youtube_user_input")
+        webpages = st.text_input(label="Web Page URLs (Use commas to seperate urls. Won't work with sites that require logins. Must include https://)",  placeholder="https://chrisyork.co/", key="webpage_user_input")
 
 # Check to see if there is an @ symbol or not on the user name
 #if twitter_handle and twitter_handle[0] == "@":
@@ -334,21 +339,23 @@ elif output_type == 'Meeting Bio':
 
         st.markdown(f"### Output:")
         data_dict = json.loads(linkedin_data)
-        col1, col2 = st.columns(2)
+        col3, col4 = st.columns(2)
 
         st.markdown(f"##### 📋 Basic Information")
 
         with col1:
-            st.write(f"Name")
+            st.markdown(f"###### Name")
+            st.write(data_dict["full_name"])
+            st.markdown(f"###### Location")
+            st.write(data_dict["city"] + ", " + data_dict["state"] + ", " + data_dict["country"])
+            st.markdown(f"###### Occupation")
+            st.write(data_dict["occupation"])
 
         with col2:
             st.image(data_dict["profile_pic_url"])
 
-        st.write(data_dict["full_name"])
-        st.write(f"Email")
-        st.write(data_dict["email"])
-        st.write(f"Location")
-        st.write(data_dict["city"] + ", " + data_dict["state"] + ", " + data_dict["country"])
+
+        
 
 
         st.markdown(f"##### 🌐 Links")
