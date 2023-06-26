@@ -340,17 +340,20 @@ elif output_type == 'Meeting Bio':
         st.markdown(f"### Output:")
         data_dict = json.loads(linkedin_data)
         company = data_dict["experiences"][0]["company"]
+        company_site = data_dict["experiences"][0]["company_linkedin_profile_url"]
         col3, col4 = st.columns(2)
 
-        st.markdown(f"##### 📋 Basic Information")
-
+        
         with col3:
+            st.markdown(f"##### 📋 Basic Information")
             st.markdown(f"###### Name")
             st.write(data_dict["full_name"])
             st.markdown(f"###### Location")
             st.write(data_dict["city"] + ", " + data_dict["state"] + ", " + data_dict["country"])
             st.markdown(f"###### Occupation")
             st.write(data_dict["occupation"])
+            st.markdown(f"###### LinkedIn Bio")
+            st.write(data_dict["summary"])
 
         with col4:
             st.image(data_dict["profile_pic_url"])
@@ -358,24 +361,21 @@ elif output_type == 'Meeting Bio':
 
         
 
-
         st.markdown(f"##### 🌐 Links")
         # Add the corresponding links
         st.markdown("###### Personal Links")
-
         st.markdown("* [LinkedIn](https://www.linkedin.com)")
         st.markdown("* [Twitter](https://www.twitter.com)")
 
         st.markdown("###### Company Links")
-    
-        st.markdown(f"* [{company} Site](https://chrisyork.co)")
-        st.markdown(f"* [{company} LinkedIn](https://www.linkedin.com/company)")
-        st.markdown(f"* [{company} Twitter](https://www.twitter.com/pave)")
+        st.markdown(f"* [{company} LinkedIn]({company_site})")
 
-        st.markdown(f"##### 📖 Bio")
-        st.markdown(f"###### Twitter Bio")
-        st.write(data_dict["twitter_bio"])
-        st.write(f"LinkedIn Bio")
-        st.write(data_dict["linkedin_bio"])
+
+        st.markdown(f"##### 👥 Commonalities")
+        st.markdown("* [LinkedIn](https://www.linkedin.com)")
+        st.markdown("* [Twitter](https://www.twitter.com)")        
+
+        st.markdown(f"##### 📖 Education")    
+
         st.write(output['output_text'])
 
