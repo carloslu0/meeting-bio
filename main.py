@@ -261,7 +261,7 @@ elif output_type == 'Meeting Bio':
         linkedin_profile_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
 
     with col2:    
-        youtube_videos = st.text_input(label="YouTube URLs (Use commas to seperate videos)",  placeholder="Ex: https://www.youtube.com/watch?v=c_hO_fjmMnk, https://www.youtube.com/watch?v=c_hO_fjmMnk", key="youtube_user_input")
+        youtube_videos = st.text_input(label="YouTube URLs (Use commas to seperate videos)",  placeholder="E.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ", key="youtube_user_input")
         webpages = st.text_input(label="Web Page URLs (Use commas to seperate urls. Won't work with sites that require logins. Must include https://)",  placeholder="https://chrisyork.co/", key="webpage_user_input")
 
 # Check to see if there is an @ symbol or not on the user name
@@ -339,7 +339,7 @@ elif output_type == 'Meeting Bio':
 
         st.markdown(f"### Output:")
         data_dict = json.loads(linkedin_data)
-        company = linkedin_data["experiences"][0]["company"]
+        company = data_dict["experiences"][0]["company"]
         col3, col4 = st.columns(2)
 
         st.markdown(f"##### 📋 Basic Information")
@@ -368,12 +368,12 @@ elif output_type == 'Meeting Bio':
 
         st.markdown("###### Company Links")
     
-        st.markdown(f"* [{company} Site]({company_site})")
-        st.markdown("* [Company LinkedIn](https://www.linkedin.com/company)")
-        st.markdown("* [Pave Twitter](https://www.twitter.com/pave)")
+        st.markdown(f"* [{company} Site](https://chrisyork.co)")
+        st.markdown(f"* [{company} LinkedIn](https://www.linkedin.com/company)")
+        st.markdown(f"* [{company} Twitter](https://www.twitter.com/pave)")
 
-        st.write(f"📖 Bio")
-        st.write(f"Twitter Bio")
+        st.markdown(f"##### 📖 Bio")
+        st.markdown(f"###### Twitter Bio")
         st.write(data_dict["twitter_bio"])
         st.write(f"LinkedIn Bio")
         st.write(data_dict["linkedin_bio"])
