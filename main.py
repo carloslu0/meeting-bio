@@ -339,11 +339,12 @@ elif output_type == 'Meeting Bio':
 
         st.markdown(f"### Output:")
         data_dict = json.loads(linkedin_data)
+        company = linkedin_data["experiences"][0]["company"]
         col3, col4 = st.columns(2)
 
         st.markdown(f"##### 📋 Basic Information")
 
-        with col1:
+        with col3:
             st.markdown(f"###### Name")
             st.write(data_dict["full_name"])
             st.markdown(f"###### Location")
@@ -351,7 +352,7 @@ elif output_type == 'Meeting Bio':
             st.markdown(f"###### Occupation")
             st.write(data_dict["occupation"])
 
-        with col2:
+        with col4:
             st.image(data_dict["profile_pic_url"])
 
 
@@ -360,15 +361,16 @@ elif output_type == 'Meeting Bio':
 
         st.markdown(f"##### 🌐 Links")
         # Add the corresponding links
-        st.markdown(f"###### Personal")
+        st.markdown("###### Personal Links")
 
-        st.write(f"LinkedIn")
-        st.write(f"Twitter")
-        st.write(f"Company")
+        st.markdown("* [LinkedIn](https://www.linkedin.com)")
+        st.markdown("* [Twitter](https://www.twitter.com)")
 
-        st.write(f"Company Site")
-        st.write(f"Company LinkedIn")
-        st.write(f"Pave Twitter")
+        st.markdown("###### Company Links")
+    
+        st.markdown(f"* [{company} Site]({company_site})")
+        st.markdown("* [Company LinkedIn](https://www.linkedin.com/company)")
+        st.markdown("* [Pave Twitter](https://www.twitter.com/pave)")
 
         st.write(f"📖 Bio")
         st.write(f"Twitter Bio")
