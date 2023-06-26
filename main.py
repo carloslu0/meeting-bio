@@ -353,16 +353,18 @@ elif output_type == 'Meeting Bio':
             st.markdown(f"###### Occupation")
             st.write(data_dict["occupation"])
             st.markdown(f"###### LinkedIn Bio")
-            st.write(data_dict["summary"])
+            st.write(data_dict["headline"])
 
         with col4:
             st.image(data_dict["profile_pic_url"])
 
 
-        
+        st.markdown(f"##### 📖 Summary")
+        st.write(data_dict['Summary'])
 
-        st.markdown(f"##### 🌐 Links")
         # Add the corresponding links
+        st.markdown(f"##### 🌐 Links")
+      
         st.markdown("###### Personal Links")
         st.markdown("* [LinkedIn](https://www.linkedin.com)")
         st.markdown("* [Twitter](https://www.twitter.com)")
@@ -372,10 +374,10 @@ elif output_type == 'Meeting Bio':
 
 
         st.markdown(f"##### 👥 Commonalities")
-        st.markdown("* [LinkedIn](https://www.linkedin.com)")
-        st.markdown("* [Twitter](https://www.twitter.com)")        
+        st.markdown(f"###### Shared LinkedIn Connections")
+        st.write(f"None")        
 
-        st.markdown(f"##### 📖 Education")    
+        st.markdown(f"##### 🎓 Education")    
 
-        st.write(output['output_text'])
+        #st.write(output['output_text'])
 
