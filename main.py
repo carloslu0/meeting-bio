@@ -372,7 +372,9 @@ elif output_type == 'Meeting Bio':
         
                  Perform the following action:
                  1. Help me to prepare for this meeting by checking if there are any shared school/education connections. Look for details like the university name, highschool name, field of study, etc. 
-                 2. If there are any shared school/education connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Do not add any paragraphs. Only the bullet points with your answers. Write 'None' if you cannot find any relevant info."""
+                 2. If there are any shared school/education connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Do not add any paragraphs. Only the bullet points with your answers. Write 'None' if you cannot find any relevant info.
+                 
+                 Shared School Connection:"""
 
         school_response = get_gpt4_response(school_commonalities_prompt)
         school_content = school_response['choices'][0]['message']['content']
@@ -386,7 +388,9 @@ elif output_type == 'Meeting Bio':
         
                  Perform the following action:
                  1. Help me to prepare for this meeting by checking if there are any shared work/company connections. Look for details like the current company, previous companies, industries, etc. 
-                 2. If there are any shared work/company connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Do not add any paragraphs. Only the bullet points with your answers. Write 'None' if you cannot find any relevant info.""" 
+                 2. If there are any shared work/company connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Do not add any paragraphs. Only the bullet points with your answers. Write 'None' if you cannot find any relevant info.
+                 
+                 Shared Company Connection:""" 
         
 
         work_response = get_gpt4_response(work_commonalities_prompt)
