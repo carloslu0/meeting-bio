@@ -141,7 +141,7 @@ def get_gpt4_response(prompt):
     )
     return gpt4_response
 
-#Create json to text helper function
+#Create JSON to text helper function for entire personal information section
 def convert_personal_info_to_text(personal_info_keys, personal_info_json_str):
     personal_info_parts = []
     personal_info_json = json.loads(personal_info_json_str)  # Convert the string to a dictionary
@@ -151,19 +151,23 @@ def convert_personal_info_to_text(personal_info_keys, personal_info_json_str):
 
     return personal_info_parts
 
+#Create JSON to text helper function for parsed linkedin data
+def convert_json_to_text(json_str):
+    data = json.loads(json_str)  # Parse the JSON string to a dictionary
+    text_parts = []
+
+    for key, value in data.items():
+        text_parts.append(f"{key}: {value}")
+
+    text = "\n".join(text_parts)
+    return text
+
 
 # Prompts
-response = {
-    'Meeting Bio' : """
+response = """
         Your goal is to generate a 2 page summary about them
         Please respond with a few short paragraphs that would prepare someone to talk to this person
-        On the second page, transform the LinkedIn data that you have into a list of bullet points about the person.
-    """,
-    'Client Data' : """
-        Your goal is to generate a 1 page summary about them
-        Please respond with a few short paragraphs that would prepare someone to talk to this person
-    """
-}
+        On the second page, transform the LinkedIn data that you have into a list of bullet points about the person."""
 
 map_prompt = """You are a helpful AI bot that aids a user in research.
 Below is information about a person named {persons_name}.
@@ -182,7 +186,7 @@ map_prompt_template = PromptTemplate(template=map_prompt, input_variables=["text
 combine_prompt = """
 You are a helpful AI bot that aids a user in research.
 You will be given information about {persons_name}.
-Do not make anything up, only use information which is in the person's context. Limit your answer to 2 paragraphs only.
+Do not make anything up, only use information which is in the person's context. Limit your answer to 200-400 words.
 
 {response}
 
@@ -214,6 +218,10 @@ if 'personal_info_keys' not in st.session_state:
 if 'personal_info_json' not in st.session_state:
     st.session_state.personal_info_json = ''
 
+# Initialize personal_linkedin_json in session state if not present
+if 'personal_linkedin_data' not in st.session_state:
+    st.session_state.personal_linkedin_json = ''
+
 # Personal Information section
 if output_type == 'Personal Information':
     st.markdown("# Personal Information")
@@ -233,9 +241,12 @@ if output_type == 'Personal Information':
         # Convert session state to JSON
         st.session_state.personal_info_json = json.dumps(st.session_state.personal_info_keys)
         st.write("PersonalInfo JSON:", st.session_state.personal_info_json)  # Debug line
+        
 
-
-
+        personal_linkedin_data = get_linkedin_data(api_key=PROXYCURL_API_KEY, linkedin_url=st.session_state.personal_info_json['linkedin_url']) if st.session_state.personal_info_json['linkedin_url'] else ""
+        st.session_state.personal_linkedin_data = personal_linkedin_data
+        st.write(st.session_state.personal_linkedin_data)
+        
 # Meeting Bio section
 elif output_type == 'Meeting Bio':
     st.markdown("# Meeting Bio")
@@ -322,7 +333,7 @@ elif output_type == 'Meeting Bio':
 
     # Summarize the 'About' section further and turn it into bullet points.
         linkedin_summary_prompt = f"""You are provided with a long description of a person, delimited by triple backticks.
-                Turn this description into a bullet point list of important details. Limit this to 3-5 bullet points. Do not add any paragraphs. Only the bullet points with your answers.
+                Extract the most important details about the person and turn this into 3-5 bullet points. Do not add any paragraphs. Only the bullet points with your answers.
 
                 Description: ```{data_dict['summary']}```"""
 
@@ -341,6 +352,7 @@ elif output_type == 'Meeting Bio':
 
     # Convert Personal Info JSON to text in order to use it in the prompt
         converted_personal_info = convert_personal_info_to_text(st.session_state.personal_info_keys, st.session_state.personal_info_json)
+        converted_linkedin_data = convert_json_to_text(st.session_state.personal_linkedin_data)
 
 # Output the text
     
@@ -349,7 +361,7 @@ elif output_type == 'Meeting Bio':
         school_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
                  The second set, called 'researched person information', provides data of a person I will be meeting with.
          
-                 PERSONAL INFORMATION: ```{converted_personal_info}```
+                 PERSONAL INFORMATION: ```{converted_personal_info}, "\n\n", {st.session_state.personal_linkedin_data}```
                  RESEARCHED PERSON INFORMATION: ```{user_information}```
         
                  Perform the following action:
@@ -363,7 +375,7 @@ elif output_type == 'Meeting Bio':
         work_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
                  The second set, called 'researched person information', provides data of a person I will be meeting with.
          
-                 PERSONAL INFORMATION: ```{converted_personal_info}```
+                 PERSONAL INFORMATION: ```{converted_personal_info}, "\n\n", {st.session_state.personal_linkedin_data}```
                  RESEARCHED PERSON INFORMATION: ```{user_information}```
         
                  Perform the following action:
@@ -380,21 +392,21 @@ elif output_type == 'Meeting Bio':
         with col3:
             st.markdown(f"##### 📋 Basic Information")
             st.markdown(f"###### Name")
-            st.write(data_dict["full_name"])
+            st.write(data_dict.get("full_name", ""))
             st.markdown(f"###### Location")
-            st.write(data_dict["city"] + ", " + data_dict["state"] + ", " + data_dict["country"])
+            st.write((data_dict.get("city", "")  + ", " + data_dict.get("state", "") + ", " + data_dict.get("country", "")).strip(", "))
             st.markdown(f"###### Occupation")
-            st.write(data_dict["occupation"])
+            st.write(data_dict.get("occupation", ""))
             st.markdown(f"###### LinkedIn Bio")
-            st.write(data_dict["headline"])
+            st.write(data_dict.get("headline", ""))
         
         with col4:
             st.image(data_dict["profile_pic_url"])
 
 
         st.markdown(f"##### 📖 Summary")
-        st.write(linkedin_content)
-        st.write(output['output_text'])
+        st.write(linkedin_content if linkedin_content is not None else "")
+        st.write(output['output_text'] if output.get['output_text'] is not None else "")
 
         st.markdown(f"##### 👥 Commonalities")
         st.markdown(f"###### Shared School Connections")
@@ -405,20 +417,30 @@ elif output_type == 'Meeting Bio':
         # Add the corresponding links
         st.markdown(f"##### 🌐 Links")
       
+        def get_value(data, default=""):
+            return data.strip(", ") if data else default
+
+        # Personal Links
+
         st.markdown("###### Personal Links")
-        st.markdown(f"* [LinkedIn](https://linkedin.com/in/{data_dict['public_identifier']})")
+        st.markdown(f"* [LinkedIn](https://linkedin.com/in/{get_value(data_dict['public_identifier'])})")
         st.markdown("* [Twitter](https://www.twitter.com)")
 
+        # Company Links
         st.markdown("###### Company Links")
-        st.markdown(f"* [{company} LinkedIn]({company_site})")
+        st.markdown(f"* [{get_value(company)} LinkedIn]({get_value(company_site)})")
 
-
-        # Add work history
-        st.markdown(f"##### 💼 Work History") 
-        st.write("TK: Work History")
-        # Add school history
-        st.markdown(f"##### 🎓 Education")    
-        st.write("TK: Education")
+        # Work History
+        st.markdown(f"##### 💼 Work History")
+        st.markdown(f"###### Current")
+        st.write(f"* {get_value(data_dict['experiences'][0]['title'])} @ {get_value(data_dict['experiences'][0]['company'])} ({get_value(data_dict['experiences'][0]['starts_at']['month'])}/{get_value(data_dict['experiences'][0]['starts_at']['day'])}/{get_value(data_dict['experiences'][0]['starts_at']['year'])}) ")
+        st.markdown(f"###### Previous")
+        st.write(f"* {get_value(data_dict['experiences'][1]['title'])} @ {get_value(data_dict['experiences'][1]['company'])} ({get_value(data_dict['experiences'][1]['starts_at']['month'])}/{get_value(data_dict['experiences'][1]['starts_at']['day'])}/{get_value(data_dict['experiences'][1]['starts_at']['year'])}) ")
+    
+        # School History
+        st.markdown(f"##### 🎓 Education")
+        st.write(f"* {get_value(data_dict['education'][0]['field_of_study'])} @ {get_value(data_dict['education'][0]['school'])} ({get_value(data_dict['education'][0]['starts_at']['month'])}/{get_value(data_dict['education'][0]['starts_at']['day'])}/{get_value(data_dict['education'][0]['starts_at']['year'])}) ")
+        st.write(f"* {get_value(data_dict['education'][1]['field_of_study'])} @ {get_value(data_dict['education'][1]['school'])} ({get_value(data_dict['education'][1]['starts_at']['month'])}/{get_value(data_dict['education'][1]['starts_at']['day'])}/{get_value(data_dict['education'][1]['starts_at']['year'])}) ")
 
         
 
