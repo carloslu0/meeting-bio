@@ -279,7 +279,6 @@ if output_type == 'Personal Information':
         
         # Show success message instead of "Getting LinkedIn Data"
         center_running()
-        time.sleep(2)
         st.success("Successfully extracted LinkedIn data!") 
 
 
