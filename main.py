@@ -243,8 +243,9 @@ if output_type == 'Personal Information':
         st.write("PersonalInfo JSON:", st.session_state.personal_info_json)  # Debug line
         
 
-        personal_linkedin_data = get_linkedin_data(api_key=PROXYCURL_API_KEY, linkedin_url=st.session_state.personal_info_json['linkedin_url']) if st.session_state.personal_info_json['linkedin_url'] else ""
-        st.session_state.personal_linkedin_data = convert_json_to_text(personal_linkedin_data)
+        personal_linkedin_data = get_linkedin_data(api_key=PROXYCURL_API_KEY, linkedin_url=linkedin_url) if linkedin_url else "" 
+        personal_linkedin_data_json = json.dumps(personal_linkedin_data)
+        st.session_state.personal_linkedin_data = convert_json_to_text(personal_linkedin_data_json)
         st.write(st.session_state.personal_linkedin_data)
 
 # Meeting Bio section
