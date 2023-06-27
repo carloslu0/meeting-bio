@@ -165,14 +165,14 @@ def convert_json_to_text(json_str):
 
 # Prompts
 response = """
-        Your goal is to generate a 2 page summary about them
-        Please respond with a few short paragraphs that would prepare someone to talk to this person
-        On the second page, transform the LinkedIn data that you have into a list of bullet points about the person."""
+        Your goal is to generate a a concise summary that would prepare someone to talk to this person.
+        Please limit your answer to 2 paragraphs, with 80-100 words per paragraph. 
+        """
 
 map_prompt = """You are a helpful AI bot that aids a user in research.
 Below is information about a person named {persons_name}.
 Information will include interview transcripts, and blog posts about {persons_name}
-Use specifics from the research when possible.
+Use specifics from the research when possible. 
 
 {response}
 
@@ -186,7 +186,7 @@ map_prompt_template = PromptTemplate(template=map_prompt, input_variables=["text
 combine_prompt = """
 You are a helpful AI bot that aids a user in research.
 You will be given information about {persons_name}.
-Do not make anything up, only use information which is in the person's context. Limit your answer to 200-400 words.
+Do not make anything up, only use information which is in the person's context.
 
 {response}
 
