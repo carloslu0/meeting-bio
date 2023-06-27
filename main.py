@@ -142,9 +142,9 @@ def get_gpt4_response(prompt):
     return gpt4_response
 
 #Create json to text helper function
-def convert_personal_info_to_text(personal_info_keys, personal_info_json):
+def convert_personal_info_to_text(st.session_state.personal_info_keys, personal_info_json):
     personal_info_parts = []  
-    for key in personal_info_keys:  
+    for key in st.session_state.personal_info_keys:  
         if key in personal_info_json:  
             personal_info_parts.append(f"{key} is {personal_info_json[key]}")
     return ', '.join(personal_info_parts)
@@ -198,16 +198,9 @@ st.set_page_config(page_title="Meeting Bio Generator", page_icon=":robot:")
 add_sidebar = st.sidebar.title("Meeting Bio Generator")
 output_type = st.sidebar.selectbox('Choose section', ('Personal Information', 'Meeting Bio'))
 
-# Initialize session state variables if not already set
-if 'personal_info' not in st.session_state:
-    st.session_state['personal_info'] = {}
-
-# Personal Information section
-if output_type == 'Personal Information':
-    st.markdown("# Personal Information")
-
-    # Input fields for personal information with session state
-    personal_info_keys = [
+# Initialize session state variables
+if 'personal_info_keys' not in st.session_state:
+    st.session_state.personal_info_keys = [
         'name', 'email', 'linkedin_url', 'current_city', 'angellist_url', 'company_name',
         'company_linkedin_url', 'other_website_urls', 'undergraduate_school_name',
         'undergraduate_school_location', 'undergraduate_school_year',
@@ -215,8 +208,14 @@ if output_type == 'Personal Information':
         'highschool_name', 'highschool_location', 'highschool_year', 'youtube_videos'
     ]
 
-    for key in personal_info_keys:
-        st.session_state.personal_info[key] = st.text_input(key.capitalize().replace('_', ' '))
+
+# Personal Information section
+if output_type == 'Personal Information':
+    st.markdown("# Personal Information")
+
+# Create input boxes for each key
+    for key in st.session_state.personal_info_keys:
+        st.session_state.personal_info_keys[key] = st.text_input(f"Enter your {key}", st.session_state.personal_info_keys[key])
 
     # Add a save button 
     save_button = st.button("Save Personal Information")
@@ -323,6 +322,15 @@ elif output_type == 'Meeting Bio':
 
         linkedin_response = get_gpt4_response(linkedin_summary_prompt)
 
+    # Initialize the session state if not set
+        if 'personal_info_keys' not in st.session_state:
+            st.session_state.personal_info_keys = [
+                'name', 'email', 'linkedin_url', 'current_city', 'angellist_url', 'company_name',
+                'company_linkedin_url', 'other_website_urls', 'undergraduate_school_name',
+                'undergraduate_school_location', 'undergraduate_school_year',
+                'undergraduate_school_area_of_study', 'undergraduate_school_linkedin',
+                'highschool_name', 'highschool_location', 'highschool_year', 'youtube_videos'
+            ]
 
     # Convert Personal Info JSON to text in order to use it in the prompt
         converted_personal_info = convert_personal_info_to_text(st.session_state.personal_info_keys, st.session_state.personal_info_json)
