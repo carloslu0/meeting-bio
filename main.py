@@ -248,6 +248,8 @@ if output_type == 'Personal Information':
         personal_linkedin_data = json.loads(personal_linkedin_data_json)
         st.session_state.personal_linkedin_data_json = convert_json_to_text(personal_linkedin_data)
         
+        # Show success message instead of "Getting LinkedIn Data"
+        st.success("Successfully extracted LinkedIn data!") 
 
 
 
