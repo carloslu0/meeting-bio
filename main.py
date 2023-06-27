@@ -133,17 +133,17 @@ def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_c
     else:
         raise Exception(f'Request failed with status code {response.status_code}: {response.text}')
 
-#Create GPT4 completion helper function    
-def get_gpt4_response(prompt):
-    gpt4_response = openai.ChatCompletion.create(  
-        model="gpt-4",
+#Create GPT3.5-turbo completion helper function    
+def get_gpt_response(prompt):
+    gpt_response = openai.ChatCompletion.create(  
+        model="gpt-3.5-turbo-16k",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user",  
              "content": prompt}  
         ]
     )
-    return gpt4_response
+    return gpt_response
 
 #Create JSON to text helper function for entire personal information section
 def convert_personal_info_to_text(personal_info_keys, personal_info_json_str):
@@ -240,7 +240,7 @@ if output_type == 'Personal Information':
 
     rain(
         emoji="🎈",
-        font_size=54,
+        font_size=40,
         falling_speed=5,
         animation_length="infinite",
     )
@@ -290,7 +290,7 @@ elif output_type == 'Meeting Bio':
 
     rain(
         emoji="📚",
-        font_size=54,
+        font_size=40,
         falling_speed=5,
         animation_length="infinite",
     )
@@ -381,7 +381,7 @@ elif output_type == 'Meeting Bio':
 
                 Description: ```{data_dict['summary']}```"""
 
-        linkedin_response = get_gpt4_response(linkedin_summary_prompt)
+        linkedin_response = get_gpt_response(linkedin_summary_prompt)
         linkedin_content = linkedin_response['choices'][0]['message']['content']
 
     # Initialize the session state if not set
@@ -412,7 +412,7 @@ elif output_type == 'Meeting Bio':
                  1. Help me to prepare for this meeting by checking if there are any shared school/education connections. Look for details like if both of us have went to the same university, highschool, etc. Also check if we have the same field of study and anything relevant to our educational backgrounds.
                  2. If there are any shared school/education connections, provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info."""
 
-        school_response = get_gpt4_response(school_commonalities_prompt)
+        school_response = get_gpt_response(school_commonalities_prompt)
         school_content = school_response['choices'][0]['message']['content']
 
 
@@ -427,7 +427,7 @@ elif output_type == 'Meeting Bio':
                  2. If there are any shared work/company connections, provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info."""
         
 
-        work_response = get_gpt4_response(work_commonalities_prompt)
+        work_response = get_gpt_response(work_commonalities_prompt)
         work_content = work_response['choices'][0]['message']['content']
 
         investment_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
@@ -441,7 +441,7 @@ elif output_type == 'Meeting Bio':
                  2. Provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info."""
         
 
-        investment_response = get_gpt4_response(investment_commonalities_prompt)
+        investment_response = get_gpt_response(investment_commonalities_prompt)
         investment_content = investment_response['choices'][0]['message']['content']
 
         other_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
@@ -455,7 +455,7 @@ elif output_type == 'Meeting Bio':
                  2. If there are any other non work/school commonalities, provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info."""
         
 
-        other_response = get_gpt4_response(other_commonalities_prompt)
+        other_response = get_gpt_response(other_commonalities_prompt)
         other_content = other_response['choices'][0]['message']['content']
 
     
