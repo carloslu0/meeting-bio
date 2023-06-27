@@ -469,8 +469,8 @@ elif output_type == 'Meeting Bio':
             st.write(data_dict.get("full_name", ""))
             st.markdown(f"###### Location")
             st.write((data_dict.get("city", "")  + ", " + data_dict.get("state", "") + ", " + data_dict.get("country", "")).strip(", "))
-            st.markdown(f"###### Occupation"
-            st.write(data_dict.get("occupation", "")
+            st.markdown(f"###### Occupation")
+            st.write(data_dict.get("occupation", ""))
             st.markdown(f"###### LinkedIn Bio")
             st.write(data_dict.get("headline", ""))
         
@@ -480,11 +480,11 @@ elif output_type == 'Meeting Bio':
 
             st.markdown(f"##### 📖 Summary")
             st.write(linkedin_content if linkedin_content is not None else "")
-            st.write(output['output_text']))
+            st.write(output['output_text'])
 
             st.markdown(f"##### 👥 Commonalities")
             st.markdown(f"###### Shared School Connections")
-            st.write(school_content))
+            st.write(school_content)
             st.markdown(f"###### Shared Company Connections")
             st.write(work_content)
             st.markdown(f"###### Similar Investments")
