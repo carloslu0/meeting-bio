@@ -393,20 +393,20 @@ elif output_type == 'Meeting Bio':
 
 
         st.markdown(f"##### 📖 Summary")
-        st.write(linkedin_response)
+        st.write(linkedin_content)
         st.write(output['output_text'])
 
         st.markdown(f"##### 👥 Commonalities")
         st.markdown(f"###### Shared School Connections")
-        st.write(school_response)
+        st.write(school_content)
         st.markdown(f"###### Shared Company Connections")
-        st.write(work_response)   
+        st.write(work_content)   
 
         # Add the corresponding links
         st.markdown(f"##### 🌐 Links")
       
         st.markdown("###### Personal Links")
-        st.markdown(f"* [LinkedIn](https://linkedin.com/in/{public_identifier})")
+        st.markdown(f"* [LinkedIn](https://linkedin.com/in/{data_dict['public_identifier']})")
         st.markdown("* [Twitter](https://www.twitter.com)")
 
         st.markdown("###### Company Links")
