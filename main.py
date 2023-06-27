@@ -244,9 +244,9 @@ if output_type == 'Personal Information':
         
 
         personal_linkedin_data = get_linkedin_data(api_key=PROXYCURL_API_KEY, linkedin_url=st.session_state.personal_info_json['linkedin_url']) if st.session_state.personal_info_json['linkedin_url'] else ""
-        st.session_state.personal_linkedin_data = personal_linkedin_data
+        st.session_state.personal_linkedin_data = convert_json_to_text(st.session_state.personal_linkedin_data)
         st.write(st.session_state.personal_linkedin_data)
-        
+
 # Meeting Bio section
 elif output_type == 'Meeting Bio':
     st.markdown("# Meeting Bio")
@@ -352,7 +352,7 @@ elif output_type == 'Meeting Bio':
 
     # Convert Personal Info JSON to text in order to use it in the prompt
         converted_personal_info = convert_personal_info_to_text(st.session_state.personal_info_keys, st.session_state.personal_info_json)
-        converted_linkedin_data = convert_json_to_text(st.session_state.personal_linkedin_data)
+
 
 # Output the text
     
