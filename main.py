@@ -1,30 +1,32 @@
-# LLMs
-from langchain import PromptTemplate
-from langchain.chat_models import ChatOpenAI
+# NLP and ML  
+from langchain import PromptTemplate   
+from langchain.chat_models import ChatOpenAI  
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
-from langchain.prompts import PromptTemplate
+from langchain.prompts import PromptTemplate   
 
-# Streamlit
-import streamlit as st
+# Streamlit   
+import streamlit as st     
 
-# Twitter
-import tweepy
-    
-# Scraping
-import requests
-from bs4 import BeautifulSoup
-from markdownify import markdownify as md
+# APIs
+# OpenAI
+import openai  
+# Twitter   
+import tweepy       
+# YouTube  
+from langchain.document_loaders import YoutubeLoader   
 
-# YouTube
-from langchain.document_loaders import YoutubeLoader
-# !pip install youtube-transcript-api
+# Scraping   
+import requests   
+from bs4 import BeautifulSoup   
+from markdownify import markdownify as md    
 
-# Environment Variables
-import json
-import requests
-import os
-from dotenv import load_dotenv
+# Environment Variables   
+import json   
+import requests   
+import os   
+from dotenv import load_dotenv  
+
 
 load_dotenv()
 
@@ -52,65 +54,9 @@ def load_LLM(openai_api_key):
 
 # A function that will be called only if the environment's openai_api_key isn't set
 def get_openai_api_key():
+    """Gets OpenAI API key from user input."""
     input_text = st.text_input(label="OpenAI API Key (or set it as .env variable)",  placeholder="Ex: sk-2twmA8tfCb8un4...", key="openai_api_key_input")
     return input_text
-
-# We'll query 80 tweets because we end up filtering out a bunch
-def get_original_tweets(screen_name, tweets_to_pull=80):
-    print("Getting Tweets...")
-    
-    # Tweepy set up
-    auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
-    auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
-    api = tweepy.API(auth)
-
-    # Holder for the tweets
-    tweets = []
-
-    # Pull the tweets
-    tweepy_results = tweepy.Cursor(api.user_timeline,
-                                   screen_name=screen_name,
-                                   tweet_mode='extended',
-                                   exclude_replies=True).items(tweets_to_pull)
-    
-    # Run through tweets and remove retweets and quote tweets
-    for status in tweepy_results:
-        if hasattr(status, 'retweeted_status') or hasattr(status, 'quoted_status'):
-            # Skip if it's a retweet or quote tweet
-            continue
-        else:
-            tweets.append(status.full_text)
-
-    # Convert the list of tweets into a string of tweets
-    user_tweets = "\n\n".join(tweets)
-    
-    return user_tweets
-
-# We'll get the latest 3 tweets
-def get_latest_tweets(screen_name, tweets_to_pull=3):
-    print("Getting Latest Tweets...")
-    
-    # Tweepy set up
-    auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_API_SECRET)
-    auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
-    api = tweepy.API(auth)
-
-    # Holder for the tweets
-    latest_tweets = []
-
-    # Pull the tweets
-    tweepy_results = tweepy.Cursor(api.user_timeline,
-                                   screen_name=screen_name,
-                                   tweet_mode='extended').items(tweets_to_pull)
-
-    # Collect the last 3 tweets
-    for status in tweepy_results:
-        latest_tweets.append(status.full_text)
-
-    # Convert the list of tweets into a string of tweets
-    user_latest_tweets = "\n\n".join(latest_tweets)
-    
-    return user_latest_tweets
 
 # Here we'll pull data from a website and return it's text
 def pull_from_website(url):
@@ -157,6 +103,7 @@ def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_c
                       skills='include', inferred_salary='include', personal_email='include',
                       personal_contact_number='include', twitter_profile_id='include',
                       facebook_profile_id='include', github_profile_id='include', extra='include'):
+    st.write("Getting LinkedIn Data...")
     api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin'
     header_dic = {'Authorization': 'Bearer ' + api_key}
     params = {
@@ -181,6 +128,25 @@ def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_c
         return data_str
     else:
         raise Exception(f'Request failed with status code {response.status_code}: {response.text}')
+    
+def get_gpt4_response(prompt: str) -> Dict: 
+    gpt4_response = openai.ChatCompletion.create(  
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user",  
+             "content": prompt}  
+        ]
+    )
+    return gpt4_response
+
+def convert_personal_info_to_text(personal_info_keys, personal_info_json):
+    personal_info_parts = []  
+    for key in personal_info_keys:  
+        if key in personal_info_json:  
+            personal_info_parts.append(f"{key} is {personal_info_json[key]}")
+    return ', '.join(personal_info_parts)
+
 
 # Prompts
 response = {
@@ -212,7 +178,7 @@ map_prompt_template = PromptTemplate(template=map_prompt, input_variables=["text
 combine_prompt = """
 You are a helpful AI bot that aids a user in research.
 You will be given information about {persons_name}.
-Do not make anything up, only use information which is in the person's context
+Do not make anything up, only use information which is in the person's context. Limit your answer to 2 paragraphs only.
 
 {response}
 
@@ -250,6 +216,19 @@ if output_type == 'Personal Information':
     for key in personal_info_keys:
         st.session_state.personal_info[key] = st.text_input(key.capitalize().replace('_', ' '))
 
+    # Add a save button 
+    save_button = st.button("Save Personal Information")
+
+    # If save button is clicked, save the data to session state
+    if save_button:    
+      # Display confirmation message   
+      st.success("Personal information saved!")
+    
+    # Convert session state to JSON 
+    personal_info_json = json.dumps(st.session_state.personal_info)
+
+
+
 # Meeting Bio section
 elif output_type == 'Meeting Bio':
     st.markdown("# Meeting Bio")
@@ -258,15 +237,12 @@ elif output_type == 'Meeting Bio':
 
     with col1:
         person_name = st.text_input(label="Person's Name",  placeholder="Ex: Chris York", key="persons_name")
-        linkedin_profile_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
 
     with col2:    
-        youtube_videos = st.text_input(label="YouTube URLs (Use commas to seperate videos)",  placeholder="E.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ", key="youtube_user_input")
-        webpages = st.text_input(label="Web Page URLs (Use commas to seperate urls. Won't work with sites that require logins. Must include https://)",  placeholder="https://chrisyork.co/", key="webpage_user_input")
+        linkedin_profile_url = st.text_input(label="LinkedIn Profile", placeholder="https://www.linkedin.com/in/chris-york-9bb05a11/", key="linkedin_url_input")
 
-# Check to see if there is an @ symbol or not on the user name
-#if twitter_handle and twitter_handle[0] == "@":
-#    twitter_handle = twitter_handle[1:]
+    youtube_videos = st.text_input(label="YouTube URLs (Use commas to seperate videos)",  placeholder="E.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ", key="youtube_user_input")
+    webpages = st.text_input(label="Web Page URLs (Use commas to seperate urls. Won't work with sites that require logins. Must include https://)",  placeholder="https://chrisyork.co/", key="webpage_user_input")
 
 # Output
     st.markdown(f"### {output_type}:")
@@ -290,11 +266,7 @@ elif output_type == 'Meeting Bio':
     button_ind = st.button("*Generate Output*", type='secondary', help="Click to generate output based on information")
 
 # Checking to see if the button_ind is true. If so, this means the button was clicked and we should process the links
-    if button_ind:
-     #   if not (twitter_handle or youtube_videos or webpages):
-     #       st.warning('Please provide links to parse', icon="⚠️")
-     #       st.stop()
-        
+    if button_ind:    
         if not (linkedin_profile_url or youtube_videos or webpages):
             st.warning('Please provide links to parse', icon="⚠️")
             st.stop()
@@ -308,13 +280,10 @@ elif output_type == 'Meeting Bio':
             OPENAI_API_KEY = get_openai_api_key()
 
     # Go get your data
-    #    user_tweets = get_original_tweets(twitter_handle) if twitter_handle else ""
         video_text = get_content_from_urls(parse_urls(youtube_videos), get_video_transcripts) if youtube_videos else ""
         website_data = get_content_from_urls(parse_urls(webpages), pull_from_website) if webpages else ""
         linkedin_data = get_linkedin_data(api_key=PROXYCURL_API_KEY, linkedin_url=linkedin_profile_url) if linkedin_profile_url else ""
-   
-    #    user_information = "\n".join([user_tweets, video_text, website_data])
-      
+         
         user_information = "\n".join([linkedin_data, video_text, website_data])
 
         user_information_docs = split_text(user_information)
@@ -338,12 +307,52 @@ elif output_type == 'Meeting Bio':
                     })
 
         st.markdown(f"### Output:")
+
+    # Extract and transform a few of the relevant data points    
         data_dict = json.loads(linkedin_data)
         company = data_dict["experiences"][0]["company"]
         company_site = data_dict["experiences"][0]["company_linkedin_profile_url"]
+
+    # Summarize the 'About' section further and turn it into bullet points.
+        linkedin_commonalities_prompt = f"You are provided with a long description of a person, delimited by triple backticks.  
+                 Turn this description into a bullet point list of important details. Limit this to 5 bullet points.
+         
+                 Description: ```{data_dict['summary']}```" 
+        linkedin_response = get_gpt4_response(linkedin_commonalities_prompt)
+
+    # Convert Personal Info JSON to text in order to use it in the prompt
+        converted_personal_info = convert_personal_info_to_text(personal_info_keys, personal_info_json):
+    
+
+    # OpenAI prompt to extract shared background
+        school_commonalities_prompt = f"You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
+                 The second set, called 'researched person information', provides data of a person I will be meeting with.
+         
+                 PERSONAL INFORMATION: ```{converted_personal_info}```
+                 RESEARCHED PERSON INFORMATION: ```{user_information}```
+        
+                 Perform the following action:
+                 1. Help me to prepare for this meeting by checking if there are any shared school/education connections. Look for details like the university name, highschool name, field of study, etc. 
+                 2. If there are any shared school/education connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Write 'None' if you cannot find any relevant info." 
+
+        school_response = get_gpt4_response(school_commonalities_prompt)
+
+        work_commonalities_prompt = f"You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
+                 The second set, called 'researched person information', provides data of a person I will be meeting with.
+         
+                 PERSONAL INFORMATION: ```{converted_personal_info}```
+                 RESEARCHED PERSON INFORMATION: ```{user_information}```
+        
+                 Perform the following action:
+                 1. Help me to prepare for this meeting by checking if there are any shared work/company connections. Look for details like the current company, previous companies, industries, etc. 
+                 2. If there are any shared work/company connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Write 'None' if you cannot find any relevant info." 
+        
+
+        work_response = get_gpt4_response(work_commonalities_prompt)
+
+
         col3, col4 = st.columns(2)
 
-        
         with col3:
             st.markdown(f"##### 📋 Basic Information")
             st.markdown(f"###### Name")
@@ -354,30 +363,38 @@ elif output_type == 'Meeting Bio':
             st.write(data_dict["occupation"])
             st.markdown(f"###### LinkedIn Bio")
             st.write(data_dict["headline"])
-
+        
         with col4:
             st.image(data_dict["profile_pic_url"])
 
 
         st.markdown(f"##### 📖 Summary")
-        st.write(data_dict["summary"])
+        st.write(gpt4_response)
+        st.write(output['output_text'])
+
+        st.markdown(f"##### 👥 Commonalities")
+        st.markdown(f"###### Shared School Connections")
+        st.write()
+        st.markdown(f"###### Shared Company Connections")
+        st.write(f"None")   
 
         # Add the corresponding links
         st.markdown(f"##### 🌐 Links")
       
         st.markdown("###### Personal Links")
-        st.markdown("* [LinkedIn](https://www.linkedin.com)")
+        st.markdown(f"* [LinkedIn](https://linkedin.com/in/{public_identifier})")
         st.markdown("* [Twitter](https://www.twitter.com)")
 
         st.markdown("###### Company Links")
         st.markdown(f"* [{company} LinkedIn]({company_site})")
 
 
-        st.markdown(f"##### 👥 Commonalities")
-        st.markdown(f"###### Shared LinkedIn Connections")
-        st.write(f"None")        
-
+        # Add work history
+        st.markdown(f"##### 💼 Work History") 
+        st.write("TK: Work History")
+        # Add school history
         st.markdown(f"##### 🎓 Education")    
+        st.write("TK: Education")
 
-        #st.write(output['output_text'])
+        
 
