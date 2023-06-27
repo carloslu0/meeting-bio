@@ -322,11 +322,12 @@ elif output_type == 'Meeting Bio':
 
     # Summarize the 'About' section further and turn it into bullet points.
         linkedin_summary_prompt = f"""You are provided with a long description of a person, delimited by triple backticks.
-                Turn this description into a bullet point list of important details. Limit this to 5 bullet points.
+                Turn this description into a bullet point list of important details. Limit this to 3-5 bullet points. Do not add any paragraphs. Only the bullet points with your answers.
 
                 Description: ```{data_dict['summary']}```"""
 
         linkedin_response = get_gpt4_response(linkedin_summary_prompt)
+        linkedin_content = linkedin_response['choices'][0]['message']['content']
 
     # Initialize the session state if not set
         if 'personal_info_keys' not in st.session_state:
@@ -353,9 +354,11 @@ elif output_type == 'Meeting Bio':
         
                  Perform the following action:
                  1. Help me to prepare for this meeting by checking if there are any shared school/education connections. Look for details like the university name, highschool name, field of study, etc. 
-                 2. If there are any shared school/education connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Write 'None' if you cannot find any relevant info."""
+                 2. If there are any shared school/education connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Do not add any paragraphs. Only the bullet points with your answers. Write 'None' if you cannot find any relevant info."""
 
         school_response = get_gpt4_response(school_commonalities_prompt)
+        school_content = school_response['choices'][0]['message']['content']
+
 
         work_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
                  The second set, called 'researched person information', provides data of a person I will be meeting with.
@@ -365,10 +368,11 @@ elif output_type == 'Meeting Bio':
         
                  Perform the following action:
                  1. Help me to prepare for this meeting by checking if there are any shared work/company connections. Look for details like the current company, previous companies, industries, etc. 
-                 2. If there are any shared work/company connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Write 'None' if you cannot find any relevant info.""" 
+                 2. If there are any shared work/company connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Do not add any paragraphs. Only the bullet points with your answers. Write 'None' if you cannot find any relevant info.""" 
         
 
         work_response = get_gpt4_response(work_commonalities_prompt)
+        work_content = work_response['choices'][0]['message']['content']
 
 
         col3, col4 = st.columns(2)
