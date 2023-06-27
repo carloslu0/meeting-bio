@@ -36,8 +36,10 @@ TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
 TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
 if "openai_api_key" in st.secrets:
     OPENAI_API_KEY = st.secrets["openai_api_key"]
+    openai.api_key = st.secrets["openai_api_key"]
 else:
-    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    openai.api_key = os.getenv("OPENAI_API_KEY")
 if "proxycurl_api_key" in st.secrets:
     PROXYCURL_API_KEY = st.secrets["proxycurl_api_key"]
 else:
