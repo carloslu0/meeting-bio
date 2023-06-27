@@ -128,7 +128,7 @@ def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_c
         raise Exception(f'Request failed with status code {response.status_code}: {response.text}')
 
 #Create GPT4 completion helper function    
-def get_gpt4_response(prompt: str) -> Dict: 
+def get_gpt4_response(prompt):
     gpt4_response = openai.ChatCompletion.create(  
         model="gpt-4",
         messages=[
