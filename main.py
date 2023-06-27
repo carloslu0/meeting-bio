@@ -430,11 +430,11 @@ elif output_type == 'Meeting Bio':
 
         st.markdown("###### Personal Links")
         st.markdown(f"* [LinkedIn](https://linkedin.com/in/{get_value(data_dict['public_identifier'], ' ')})")
-        st.markdown(f"* [Twitter](https://www.twitter.com/{get_value(data_dict['twitter_username'], ' ')})")
+        st.markdown(f"* [Twitter](https://www.twitter.com/), ' '")
 
         # Company Links
         st.markdown("###### Company Links")
-        st.markdown(f"* [{get_value(company, ' ')} LinkedIn]({get_value(company_site, 'https://www.linkedin.com/company/company-name')})")
+        st.markdown(f"* [{get_value(company, ' ')} LinkedIn]({get_value(company_site, 'https://www.linkedin.com/')})")
 
         # Work History
         st.markdown(f"##### 💼 Work History")
