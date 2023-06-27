@@ -142,12 +142,14 @@ def get_gpt4_response(prompt):
     return gpt4_response
 
 #Create json to text helper function
-def convert_personal_info_to_text(personal_info_keys, personal_info_json):
-    personal_info_parts = []  
-    for key in personal_info_keys:  
-        if key in personal_info_json:  
-            personal_info_parts.append(f"{key} is {personal_info_json[key]}")
-    return ', '.join(personal_info_parts)
+def convert_personal_info_to_text(personal_info_keys, personal_info_json_str):
+    personal_info_parts = []
+    personal_info_json = json.loads(personal_info_json_str)  # Convert the string to a dictionary
+
+    for key in personal_info_keys:
+        personal_info_parts.append(f"{key} is {personal_info_json[key]}")
+
+    return personal_info_parts
 
 
 # Prompts
