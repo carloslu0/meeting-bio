@@ -474,8 +474,8 @@ elif output_type == 'Meeting Bio':
             st.markdown(f"###### LinkedIn Bio")
             st.write(data_dict.get("headline", ""))
         
-            with col4:
-                st.image(data_dict["profile_pic_url"])
+        with col4:
+            st.image(data_dict["profile_pic_url"])
 
 
             st.markdown(f"##### 📖 Summary")
