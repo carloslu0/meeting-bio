@@ -142,9 +142,9 @@ def get_gpt4_response(prompt):
     return gpt4_response
 
 #Create json to text helper function
-def convert_personal_info_to_text(st.session_state.personal_info_keys, personal_info_json):
+def convert_personal_info_to_text(personal_info_keys, personal_info_json):
     personal_info_parts = []  
-    for key in st.session_state.personal_info_keys:  
+    for key in personal_info_keys:  
         if key in personal_info_json:  
             personal_info_parts.append(f"{key} is {personal_info_json[key]}")
     return ', '.join(personal_info_parts)
@@ -200,33 +200,37 @@ output_type = st.sidebar.selectbox('Choose section', ('Personal Information', 'M
 
 # Initialize session state variables
 if 'personal_info_keys' not in st.session_state:
-    st.session_state.personal_info_keys = [
-        'name', 'email', 'linkedin_url', 'current_city', 'angellist_url', 'company_name',
-        'company_linkedin_url', 'other_website_urls', 'undergraduate_school_name',
-        'undergraduate_school_location', 'undergraduate_school_year',
-        'undergraduate_school_area_of_study', 'undergraduate_school_linkedin',
-        'highschool_name', 'highschool_location', 'highschool_year', 'youtube_videos'
-    ]
+    st.session_state.personal_info_keys = {
+        'name': '', 'email': '', 'linkedin_url': '', 'current_city': '', 'angellist_url': '', 'company_name': '',
+        'company_linkedin_url': '', 'other_website_urls': '', 'undergraduate_school_name': '',
+        'undergraduate_school_location': '', 'undergraduate_school_year': '',
+        'undergraduate_school_area_of_study': '', 'undergraduate_school_linkedin': '',
+        'highschool_name': '', 'highschool_location': '', 'highschool_year': '', 'youtube_videos': ''
+    }
 
+# Initialize personal_info_json in session state if not present
+if 'personal_info_json' not in st.session_state:
+    st.session_state.personal_info_json = ''
 
 # Personal Information section
 if output_type == 'Personal Information':
     st.markdown("# Personal Information")
 
-# Create input boxes for each key
+    # Create input boxes for each key
     for key in st.session_state.personal_info_keys:
         st.session_state.personal_info_keys[key] = st.text_input(f"Enter your {key}", st.session_state.personal_info_keys[key])
 
-    # Add a save button 
+    # Add a save button
     save_button = st.button("Save Personal Information")
 
     # If save button is clicked, save the data to session state
-    if save_button:    
-      # Display confirmation message   
-      st.success("Personal information saved!")
-    
-    # Convert session state to JSON 
-    personal_info_json = json.dumps(st.session_state.personal_info)
+    if save_button:
+        # Display confirmation message
+        st.success("Personal information saved!")
+
+        # Convert session state to JSON
+        st.session_state.personal_info_json = json.dumps(st.session_state.personal_info_keys)
+        st.write("PersonalInfo JSON:", st.session_state.personal_info_json)  # Debug line
 
 
 
