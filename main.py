@@ -289,7 +289,7 @@ elif output_type == 'Meeting Bio':
     add_logo("http://placekitten.com/120/120")
 
     rain(
-        emoji="🎈",
+        emoji="📚",
         font_size=54,
         falling_speed=5,
         animation_length="infinite",
