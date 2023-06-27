@@ -374,9 +374,9 @@ elif output_type == 'Meeting Bio':
 
         st.markdown(f"##### 👥 Commonalities")
         st.markdown(f"###### Shared School Connections")
-        st.write()
+        st.write(school_response)
         st.markdown(f"###### Shared Company Connections")
-        st.write(f"None")   
+        st.write(work_response)   
 
         # Add the corresponding links
         st.markdown(f"##### 🌐 Links")
