@@ -235,7 +235,7 @@ if 'personal_linkedin_data_json' not in st.session_state:
 # Personal Information section
 if output_type == 'Personal Information':
     st.markdown("# Personal Information")
-    add_logo("https://photos.app.goo.gl/uxwZR3YNwqDY7Bi89", height=300)
+    add_logo("http://placekitten.com/120/120")
     
 
     rain(
@@ -287,7 +287,7 @@ if output_type == 'Personal Information':
 # Meeting Bio section
 elif output_type == 'Meeting Bio':
     st.markdown("# Meeting Bio")
-    add_logo("https://photos.app.goo.gl/uxwZR3YNwqDY7Bi89", height=300)
+    add_logo("http://placekitten.com/120/120")
 
     rain(
         emoji="🎈",
