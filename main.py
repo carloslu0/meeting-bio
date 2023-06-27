@@ -514,10 +514,19 @@ elif output_type == 'Meeting Bio':
         # Work History
         st.markdown(f"##### 💼 Work History")
         st.markdown(f"###### Current")
-        st.write(f"* {get_value(data_dict['experiences'][0]['title'], ' ')} @ {get_value(data_dict['experiences'][0]['company'], ' ')} ({get_value(data_dict['experiences'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['year'], ' ')}) ")
+        try:
+            st.write(f"* {get_value(data_dict['experiences'][0]['title'], ' ')} @ {get_value(data_dict['experiences'][0]['company'], ' ')} ({get_value(data_dict['experiences'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['year'], ' ')}) ")
+        except IndexError:
+            st.write("No current work experience")
         st.markdown(f"###### Previous")
-        st.write(f"* {get_value(data_dict['experiences'][1]['title'], ' ')} @ {get_value(data_dict['experiences'][1]['company'], ' ')} ({get_value(data_dict['experiences'][1]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['year'], ' ')}) ")
+        try:
+            st.write(f"* {get_value(data_dict['experiences'][1]['title'], ' ')} @ {get_value(data_dict['experiences'][1]['company'], ' ')} ({get_value(data_dict['experiences'][1]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['year'], ' ')}) ")
+        except IndexError:
+            st.write("No previous work experience")
    
         # School History
         st.markdown(f"##### 🎓 Education")
-        st.write(f"* {get_value(data_dict['education'][0]['field_of_study'], ' ')} @ {get_value(data_dict['education'][0]['school'], ' ')} ({get_value(data_dict['education'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['year'], ' ')}) ")
+        try:
+            st.write(f"* {get_value(data_dict['education'][0]['field_of_study'], ' ')} @ {get_value(data_dict['education'][0]['school'], ' ')} ({get_value(data_dict['education'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['year'], ' ')}) ")
+        except IndexError:
+            st.write("No educational background provided")
