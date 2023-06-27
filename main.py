@@ -6,13 +6,17 @@ from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate   
 
 # Streamlit   
-import streamlit as st     
+import streamlit as st    
+from streamlit_extras.customize_running import center_running
+from streamlit_extras.let_it_rain import rain
+from streamlit_extras.app_logo import add_logo
+
 
 # APIs
 # OpenAI
 import openai       
 # YouTube  
-from langchain.document_loaders import YoutubeLoader   
+from langchain.document_loaders import YoutubeLoader 
 
 # Scraping   
 import requests   
@@ -204,6 +208,12 @@ st.set_page_config(page_title="Meeting Bio Generator", page_icon=":robot:")
 add_sidebar = st.sidebar.title("Meeting Bio Generator")
 output_type = st.sidebar.selectbox('Choose section', ('Personal Information', 'Meeting Bio'))
 
+with st.sidebar:
+        st.markdown("Have a meeting coming up? I bet they are on LinkedIn or YouTube or the web. This tool is meant to help you generate \
+                a meeting bio based off of their data on the web, or topics they've recently talked about.\
+                \n\nThis tool is powered by [BeautifulSoup](https://beautiful-soup-4.readthedocs.io/en/latest/#) [markdownify](https://pypi.org/project/markdownify/), [LangChain](https://langchain.com/) and [OpenAI](https://openai.com). \
+                \n\nMade by Carlos Lucero. Forked from [@GregKamradt's](https://twitter.com/GregKamradt). repo on [LLM Interview Research Assistants](https://github.com/gkamradt/globalize-text-streamlit/blob/main/main.py)")
+
 # Initialize session state variables
 if 'personal_info_keys' not in st.session_state:
     st.session_state.personal_info_keys = {
@@ -225,10 +235,29 @@ if 'personal_linkedin_data_json' not in st.session_state:
 # Personal Information section
 if output_type == 'Personal Information':
     st.markdown("# Personal Information")
+    add_logo("https://www.dropbox.com/scl/fi/ue9vx0lxhdlobqecbyju2/Artboard-1-copy-11-100.jpg?dl=0&rlkey=71awmkvpmbj2dndji4jq9dn7c", height=300)
+    
 
-    # Create input boxes for each key
-    for key in st.session_state.personal_info_keys:
-        st.session_state.personal_info_keys[key] = st.text_input(f"Enter your {key}", st.session_state.personal_info_keys[key])
+    rain(
+        emoji="🎈",
+        font_size=54,
+        falling_speed=5,
+        animation_length="infinite",
+    )
+    
+    col1, col2 = st.columns(2)
+
+    with col1:
+        for i, key in enumerate(st.session_state.personal_info_keys):
+            if i < len(st.session_state.personal_info_keys) / 2:
+                label = key.replace('_', ' ').title()
+                st.session_state.personal_info_keys[key] = st.text_input(f"Enter your {label}", st.session_state.personal_info_keys[key])
+
+    with col2:
+        for i, key in enumerate(st.session_state.personal_info_keys):
+            if i >= len(st.session_state.personal_info_keys) / 2:
+                label = key.replace('_', ' ').title()
+                st.session_state.personal_info_keys[key] = st.text_input(f"Enter your {label}", st.session_state.personal_info_keys[key])
 
     # Add a save button
     save_button = st.button("Save Personal Information")
@@ -249,6 +278,8 @@ if output_type == 'Personal Information':
         st.session_state.personal_linkedin_data_json = convert_json_to_text(personal_linkedin_data)
         
         # Show success message instead of "Getting LinkedIn Data"
+        center_running()
+        time.sleep(2)
         st.success("Successfully extracted LinkedIn data!") 
 
 
@@ -256,6 +287,14 @@ if output_type == 'Personal Information':
 # Meeting Bio section
 elif output_type == 'Meeting Bio':
     st.markdown("# Meeting Bio")
+    add_logo("https://www.dropbox.com/scl/fi/ue9vx0lxhdlobqecbyju2/Artboard-1-copy-11-100.jpg?dl=0&rlkey=71awmkvpmbj2dndji4jq9dn7c", height=300)
+
+    rain(
+        emoji="🎈",
+        font_size=54,
+        falling_speed=5,
+        animation_length="infinite",
+    )
 
     col1, col2 = st.columns(2)
 
@@ -392,6 +431,34 @@ elif output_type == 'Meeting Bio':
         work_response = get_gpt4_response(work_commonalities_prompt)
         work_content = work_response['choices'][0]['message']['content']
 
+        investment_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
+                 The second set, called 'researched person information', provides data of a person I will be meeting with.
+         
+                 PERSONAL INFORMATION: ```{converted_personal_info}, "\n\n", {st.session_state.personal_linkedin_data_json}```
+                 RESEARCHED PERSON INFORMATION: ```{user_information}```
+        
+                 Perform the following action:
+                 1. Help me to prepare for this meeting by checking if there are any commonalities between me and the researched person's investments/advising gigs. Do not include work or school similarities e.g. going to the same schools, working in the same companies, etc. Focus on our investments, as well as instances where we advised startups/early-stage companies.
+                 2. Provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info."""
+        
+
+        investment_response = get_gpt4_response(investment_commonalities_prompt)
+        investment_content = investment_response['choices'][0]['message']['content']
+
+        other_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
+                 The second set, called 'researched person information', provides data of a person I will be meeting with.
+         
+                 PERSONAL INFORMATION: ```{converted_personal_info}, "\n\n", {st.session_state.personal_linkedin_data_json}```
+                 RESEARCHED PERSON INFORMATION: ```{user_information}```
+        
+                 Perform the following action:
+                 1. Help me to prepare for this meeting by checking if there are any commonalities between me and the researched person. Do not include work or school similarities e.g. going to the same schools, working in the same companies, etc. Focus on other non work/education similarities, as well as non-obvious similarities that we may have. An example of this is if we share similar interests, or if we have both visited a specific country before.
+                 2. If there are any other non work/school commonalities, provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info."""
+        
+
+        other_response = get_gpt4_response(other_commonalities_prompt)
+        other_content = other_response['choices'][0]['message']['content']
+
 
         col3, col4 = st.columns(2)
 
@@ -418,13 +485,22 @@ elif output_type == 'Meeting Bio':
         st.markdown(f"###### Shared School Connections")
         st.write(school_content)
         st.markdown(f"###### Shared Company Connections")
-        st.write(work_content)   
+        st.write(work_content)
+        st.markdown(f"###### Similar Investments")
+        st.write(investment_content)
+        st.markdown(f"###### Other Commonalities")
+        st.write(other_content)   
 
         # Add the corresponding links
         st.markdown(f"##### 🌐 Links")
       
         def get_value(data, default=""):
-            return data.strip(", ") if data else default
+            if data is None:
+                return default
+            elif isinstance(data, int):
+                return str(data)
+            else:
+                return str(data).strip(", ")
 
         # Personal Links
 
@@ -446,6 +522,3 @@ elif output_type == 'Meeting Bio':
         # School History
         st.markdown(f"##### 🎓 Education")
         st.write(f"* {get_value(data_dict['education'][0]['field_of_study'], ' ')} @ {get_value(data_dict['education'][0]['school'], ' ')} ({get_value(data_dict['education'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['year'], ' ')}) ")
-
-        
-
