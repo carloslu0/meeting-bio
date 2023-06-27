@@ -327,7 +327,7 @@ elif output_type == 'Meeting Bio':
     # Here we will pass our user information we gathered, the persons name and the response type from the radio button
         output = chain({"input_documents": user_information_docs,
                     "persons_name": person_name,
-                    "response" : response[output_type]
+                    "response" : response
                     })
 
         st.markdown(f"### Output:")
