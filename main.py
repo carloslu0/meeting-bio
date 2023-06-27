@@ -314,11 +314,11 @@ elif output_type == 'Meeting Bio':
         company_site = data_dict["experiences"][0]["company_linkedin_profile_url"]
 
     # Summarize the 'About' section further and turn it into bullet points.
-        linkedin_commonalities_prompt = f"You are provided with a long description of a person, delimited by triple backticks.  
+        linkedin_summary_prompt = f"You are provided with a long description of a person, delimited by triple backticks.  
                  Turn this description into a bullet point list of important details. Limit this to 5 bullet points.
          
                  Description: ```{data_dict['summary']}```" 
-        linkedin_response = get_gpt4_response(linkedin_commonalities_prompt)
+        linkedin_response = get_gpt4_response(linkedin_summary_prompt)
 
     # Convert Personal Info JSON to text in order to use it in the prompt
         converted_personal_info = convert_personal_info_to_text(personal_info_keys, personal_info_json):
@@ -369,7 +369,7 @@ elif output_type == 'Meeting Bio':
 
 
         st.markdown(f"##### 📖 Summary")
-        st.write(gpt4_response)
+        st.write(linkedin_response)
         st.write(output['output_text'])
 
         st.markdown(f"##### 👥 Commonalities")
