@@ -325,7 +325,7 @@ elif output_type == 'Meeting Bio':
 
 
     # Convert Personal Info JSON to text in order to use it in the prompt
-        converted_personal_info = convert_personal_info_to_text(personal_info_keys, personal_info_json)
+        converted_personal_info = convert_personal_info_to_text(st.session_state.personal_info_keys, st.session_state.personal_info_json)
 
 # Output the text
     
