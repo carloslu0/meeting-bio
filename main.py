@@ -10,9 +10,7 @@ import streamlit as st
 
 # APIs
 # OpenAI
-import openai  
-# Twitter   
-import tweepy       
+import openai       
 # YouTube  
 from langchain.document_loaders import YoutubeLoader   
 
@@ -128,7 +126,8 @@ def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_c
         return data_str
     else:
         raise Exception(f'Request failed with status code {response.status_code}: {response.text}')
-    
+
+#Create GPT4 completion helper function    
 def get_gpt4_response(prompt: str) -> Dict: 
     gpt4_response = openai.ChatCompletion.create(  
         model="gpt-4",
@@ -140,6 +139,7 @@ def get_gpt4_response(prompt: str) -> Dict:
     )
     return gpt4_response
 
+#Create json to text helper function
 def convert_personal_info_to_text(personal_info_keys, personal_info_json):
     personal_info_parts = []  
     for key in personal_info_keys:  
@@ -323,7 +323,9 @@ elif output_type == 'Meeting Bio':
 
 
     # Convert Personal Info JSON to text in order to use it in the prompt
-        converted_personal_info = convert_personal_info_to_text(personal_info_keys, personal_info_json):
+        converted_personal_info = convert_personal_info_to_text(personal_info_keys, personal_info_json)
+
+# Output the text
     
 
     # OpenAI prompt to extract shared background
