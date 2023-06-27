@@ -219,7 +219,7 @@ if 'personal_info_json' not in st.session_state:
     st.session_state.personal_info_json = ''
 
 # Initialize personal_linkedin_json in session state if not present
-if 'personal_linkedin_data' not in st.session_state:
+if 'personal_linkedin_data_json' not in st.session_state:
     st.session_state.personal_linkedin_json = ''
 
 # Personal Information section
@@ -243,10 +243,11 @@ if output_type == 'Personal Information':
         st.write("PersonalInfo JSON:", st.session_state.personal_info_json)  # Debug line
         
         linkedin_url = st.session_state.personal_info_keys['linkedin_url']
-        personal_linkedin_data = get_linkedin_data(api_key=PROXYCURL_API_KEY, linkedin_url=linkedin_url) if linkedin_url else "" 
-        personal_linkedin_data_json = json.dumps(personal_linkedin_data)
-        st.session_state.personal_linkedin_data = convert_json_to_text(personal_linkedin_data_json)
-        st.write(st.session_state.personal_linkedin_data)
+        personal_linkedin_data = get_linkedin_data(api_key=PROXYCURL_API_KEY, linkedin_url=linkedin_url) if linkedin_url else ""  
+        personal_linkedin_data = json.loads(personal_linkedin_data)
+        st.session_state.personal_linkedin_data_json = convert_json_to_text(personal_linkedin_data)
+        st.write(st.session_state.personal_linkedin_data_json)  # Display the text output
+
 
 # Meeting Bio section
 elif output_type == 'Meeting Bio':
