@@ -412,7 +412,7 @@ elif output_type == 'Meeting Bio':
 
         st.markdown(f"##### 📖 Summary")
         st.write(linkedin_content if linkedin_content is not None else "")
-        st.write(output['output_text'] if output.get['output_text'] is not None else "")
+        st.write(output['output_text'])
 
         st.markdown(f"##### 👥 Commonalities")
         st.markdown(f"###### Shared School Connections")
