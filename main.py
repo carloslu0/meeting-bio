@@ -245,7 +245,8 @@ if output_type == 'Personal Information':
         linkedin_url = st.session_state.personal_info_keys['linkedin_url']  
         personal_linkedin_data = get_linkedin_data(api_key=PROXYCURL_API_KEY, linkedin_url=linkedin_url) if linkedin_url else ""  
         personal_linkedin_data_json = json.dumps(personal_linkedin_data)
-        st.session_state.personal_linkedin_data_json = convert_json_to_text(personal_linkedin_data_json)
+        personal_linkedin_data = json.loads(personal_linkedin_data_json)
+        st.session_state.personal_linkedin_data_json = convert_json_to_text(personal_linkedin_data)
         st.write(st.session_state.personal_linkedin_data_json)  # Display the text output
 
 
