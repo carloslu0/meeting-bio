@@ -371,10 +371,8 @@ elif output_type == 'Meeting Bio':
                  RESEARCHED PERSON INFORMATION: ```{user_information}```
         
                  Perform the following action:
-                 1. Help me to prepare for this meeting by checking if there are any shared school/education connections. Look for details like the university name, highschool name, field of study, etc. 
-                 2. If there are any shared school/education connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Do not add any paragraphs. Only the bullet points with your answers. Write 'None' if you cannot find any relevant info.
-                 
-                 Shared School Connection:"""
+                 1. Help me to prepare for this meeting by checking if there are any shared school/education connections. Look for details like if both of us have went to the same university, highschool, etc. Also check if we have the same field of study and anything relevant to our educational backgrounds.
+                 2. If there are any shared school/education connections, provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info."""
 
         school_response = get_gpt4_response(school_commonalities_prompt)
         school_content = school_response['choices'][0]['message']['content']
@@ -388,9 +386,7 @@ elif output_type == 'Meeting Bio':
         
                  Perform the following action:
                  1. Help me to prepare for this meeting by checking if there are any shared work/company connections. Look for details like the current company, previous companies, industries, etc. 
-                 2. If there are any shared work/company connections, provide a bullet point of each connection. Limit to 3-5 bullet points only. Do not add any paragraphs. Only the bullet points with your answers. Write 'None' if you cannot find any relevant info.
-                 
-                 Shared Company Connection:""" 
+                 2. If there are any shared work/company connections, provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info."""
         
 
         work_response = get_gpt4_response(work_commonalities_prompt)
@@ -433,24 +429,23 @@ elif output_type == 'Meeting Bio':
         # Personal Links
 
         st.markdown("###### Personal Links")
-        st.markdown(f"* [LinkedIn](https://linkedin.com/in/{get_value(data_dict['public_identifier'])})")
-        st.markdown("* [Twitter](https://www.twitter.com)")
+        st.markdown(f"* [LinkedIn](https://linkedin.com/in/{get_value(data_dict['public_identifier'], ' ')})")
+        st.markdown(f"* [Twitter](https://www.twitter.com/{get_value(data_dict['twitter_username'], ' ')})")
 
         # Company Links
         st.markdown("###### Company Links")
-        st.markdown(f"* [{get_value(company)} LinkedIn]({get_value(company_site)})")
+        st.markdown(f"* [{get_value(company, ' ')} LinkedIn]({get_value(company_site, 'https://www.linkedin.com/company/company-name')})")
 
         # Work History
         st.markdown(f"##### 💼 Work History")
         st.markdown(f"###### Current")
-        st.write(f"* {get_value(data_dict['experiences'][0]['title'])} @ {get_value(data_dict['experiences'][0]['company'])} ({get_value(data_dict['experiences'][0]['starts_at']['month'])}/{get_value(data_dict['experiences'][0]['starts_at']['day'])}/{get_value(data_dict['experiences'][0]['starts_at']['year'])}) ")
+        st.write(f"* {get_value(data_dict['experiences'][0]['title'], ' ')} @ {get_value(data_dict['experiences'][0]['company'], ' ')} ({get_value(data_dict['experiences'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['year'], ' ')}) ")
         st.markdown(f"###### Previous")
-        st.write(f"* {get_value(data_dict['experiences'][1]['title'])} @ {get_value(data_dict['experiences'][1]['company'])} ({get_value(data_dict['experiences'][1]['starts_at']['month'])}/{get_value(data_dict['experiences'][1]['starts_at']['day'])}/{get_value(data_dict['experiences'][1]['starts_at']['year'])}) ")
-    
+        st.write(f"* {get_value(data_dict['experiences'][1]['title'], ' ')} @ {get_value(data_dict['experiences'][1]['company'], ' ')} ({get_value(data_dict['experiences'][1]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['year'], ' ')}) ")
+   
         # School History
         st.markdown(f"##### 🎓 Education")
-        st.write(f"* {get_value(data_dict['education'][0]['field_of_study'])} @ {get_value(data_dict['education'][0]['school'])} ({get_value(data_dict['education'][0]['starts_at']['month'])}/{get_value(data_dict['education'][0]['starts_at']['day'])}/{get_value(data_dict['education'][0]['starts_at']['year'])}) ")
-        st.write(f"* {get_value(data_dict['education'][1]['field_of_study'])} @ {get_value(data_dict['education'][1]['school'])} ({get_value(data_dict['education'][1]['starts_at']['month'])}/{get_value(data_dict['education'][1]['starts_at']['day'])}/{get_value(data_dict['education'][1]['starts_at']['year'])}) ")
+        st.write(f"* {get_value(data_dict['education'][0]['field_of_study'], ' ')} @ {get_value(data_dict['education'][0]['school'], ' ')} ({get_value(data_dict['education'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['year'], ' ')}) ")
 
         
 
