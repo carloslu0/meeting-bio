@@ -5,8 +5,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate   
 
-# Streamlit
-import pyperclip  
+# Streamlit 
 import streamlit as st    
 from streamlit_extras.customize_running import center_running
 from streamlit_extras.let_it_rain import rain
@@ -25,7 +24,6 @@ from bs4 import BeautifulSoup
 from markdownify import markdownify as md    
 
 # Environment Variables
-import pyperclip   
 import json   
 import requests   
 import os   
@@ -460,44 +458,42 @@ elif output_type == 'Meeting Bio':
         other_response = get_gpt4_response(other_commonalities_prompt)
         other_content = other_response['choices'][0]['message']['content']
 
-        meeting_bio_text = ""
+    
 
         col3, col4 = st.columns(2)
-        buffer = []
+    
 
-        with buffer:
-
-            with col3:
-                buffer.append(st.markdown(f"##### 📋 Basic Information"))
-                buffer.append(st.markdown(f"###### Name"))
-                buffer.append(st.write(data_dict.get("full_name", "")))
-                buffer.append(st.markdown(f"###### Location"))
-                buffer.append(st.write((data_dict.get("city", "")  + ", " + data_dict.get("state", "") + ", " + data_dict.get("country", "")).strip(", ")))
-                buffer.append(st.markdown(f"###### Occupation"))
-                buffer.append(st.write(data_dict.get("occupation", "")))
-                buffer.append(st.markdown(f"###### LinkedIn Bio"))
-                buffer.append(st.write(data_dict.get("headline", "")))
+        with col3:
+            st.markdown(f"##### 📋 Basic Information")
+            st.markdown(f"###### Name")
+            st.write(data_dict.get("full_name", ""))
+            st.markdown(f"###### Location")
+            st.write((data_dict.get("city", "")  + ", " + data_dict.get("state", "") + ", " + data_dict.get("country", "")).strip(", "))
+            st.markdown(f"###### Occupation"
+            st.write(data_dict.get("occupation", "")
+            st.markdown(f"###### LinkedIn Bio")
+            st.write(data_dict.get("headline", ""))
         
             with col4:
-                buffer.append(st.image(data_dict["profile_pic_url"]))
+                st.image(data_dict["profile_pic_url"])
 
 
-            buffer.append(st.markdown(f"##### 📖 Summary"))
-            buffer.append(st.write(linkedin_content if linkedin_content is not None else ""))
-            buffer.append(st.write(output['output_text']))
+            st.markdown(f"##### 📖 Summary")
+            st.write(linkedin_content if linkedin_content is not None else "")
+            st.write(output['output_text']))
 
-            buffer.append(st.markdown(f"##### 👥 Commonalities"))
-            buffer.append(st.markdown(f"###### Shared School Connections"))
-            buffer.append(st.write(school_content))
-            buffer.append(st.markdown(f"###### Shared Company Connections"))
-            buffer.append(st.write(work_content))
-            buffer.append(st.markdown(f"###### Similar Investments"))
-            buffer.append(st.write(investment_content))
-            buffer.append(st.markdown(f"###### Other Commonalities"))
-            buffer.append(st.write(other_content))   
+            st.markdown(f"##### 👥 Commonalities")
+            st.markdown(f"###### Shared School Connections")
+            st.write(school_content))
+            st.markdown(f"###### Shared Company Connections")
+            st.write(work_content)
+            st.markdown(f"###### Similar Investments")
+            st.write(investment_content)
+            st.markdown(f"###### Other Commonalities")
+            st.write(other_content)
 
             # Add the corresponding links
-            buffer.append(st.markdown(f"##### 🌐 Links"))
+            st.markdown(f"##### 🌐 Links")
       
             def get_value(data, default=""):
                 if data is None:
@@ -509,37 +505,30 @@ elif output_type == 'Meeting Bio':
 
             # Personal Links
 
-            buffer.append(st.markdown("###### Personal Links"))
-            buffer.append(st.markdown(f"* [LinkedIn](https://linkedin.com/in/{get_value(data_dict['public_identifier'], ' ')})"))
-            buffer.append(st.markdown(f"* [Twitter](https://www.twitter.com/), ' '"))
+            st.markdown("###### Personal Links")
+            st.markdown(f"* [LinkedIn](https://linkedin.com/in/{get_value(data_dict['public_identifier'], ' ')})")
+            st.markdown(f"* [Twitter](https://www.twitter.com/), ' '")
 
             # Company Links
-            buffer.append(st.markdown("###### Company Links"))
-            buffer.append(st.markdown(f"* [{get_value(company, ' ')} LinkedIn]({get_value(company_site, 'https://www.linkedin.com/')})"))
+            st.markdown("###### Company Links")
+            st.markdown(f"* [{get_value(company, ' ')} LinkedIn]({get_value(company_site, 'https://www.linkedin.com/')})")
 
             # Work History
-            buffer.append(st.markdown(f"##### 💼 Work History"))
-            buffer.append(st.markdown(f"###### Current"))
+            st.markdown(f"##### 💼 Work History")
+            st.markdown(f"###### Current")
             try:
-                buffer.append(st.write(f"* {get_value(data_dict['experiences'][0]['title'], ' ')} @ {get_value(data_dict['experiences'][0]['company'], ' ')} ({get_value(data_dict['experiences'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['year'], ' ')}) "))
+                st.write(f"* {get_value(data_dict['experiences'][0]['title'], ' ')} @ {get_value(data_dict['experiences'][0]['company'], ' ')} ({get_value(data_dict['experiences'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][0]['starts_at']['year'], ' ')}) ")
             except IndexError:
-                buffer.append(st.write("No current work experience"))
-            buffer.append(st.markdown(f"###### Previous"))
+                st.write("No current work experience")
+            st.markdown(f"###### Previous")
             try:
-                buffer.append(st.write(f"* {get_value(data_dict['experiences'][1]['title'], ' ')} @ {get_value(data_dict['experiences'][1]['company'], ' ')} ({get_value(data_dict['experiences'][1]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['year'], ' ')}) "))
+                st.write(f"* {get_value(data_dict['experiences'][1]['title'], ' ')} @ {get_value(data_dict['experiences'][1]['company'], ' ')} ({get_value(data_dict['experiences'][1]['starts_at']['month'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['day'], ' ')}/{get_value(data_dict['experiences'][1]['starts_at']['year'], ' ')}) ")
             except IndexError:
-                buffer.append(st.write("No previous work experience"))
+                st.write("No previous work experience")
    
             # School History
-            buffer.append(st.markdown(f"##### 🎓 Education"))
+            st.markdown(f"##### 🎓 Education")
             try:
-                buffer.append(st.write(f"* {get_value(data_dict['education'][0]['field_of_study'], ' ')} @ {get_value(data_dict['education'][0]['school'], ' ')} ({get_value(data_dict['education'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['year'], ' ')}) "))
+                st.write(f"* {get_value(data_dict['education'][0]['field_of_study'], ' ')} @ {get_value(data_dict['education'][0]['school'], ' ')} ({get_value(data_dict['education'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['year'], ' ')}) ")
             except IndexError:
-                buffer.append(st.write("No educational background provided"))
-
-        if st.button('Copy Meeting Bio to clipboard'):
-             # Copy output_text to the clipboard
-            pyperclip.copy(meeting_bio_text)
-
-            # Show a success message
-            st.success('Copied Meeting Bio to clipboard!')
+                st.write("No educational background provided")
