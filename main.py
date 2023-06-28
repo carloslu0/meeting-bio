@@ -409,12 +409,14 @@ elif output_type == 'Meeting Bio':
                  Perform the following action:
                  1. Help me to prepare for this meeting by checking if there are any shared school/education connections. Look for details like if both of us have went to the same university, highschool, etc. Also check if we have the same field of study and anything relevant to our educational backgrounds.
                  2. If there are any shared school/education connections, provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write only the word 'None' if you cannot find any relevant info.
-                 3. Follow the format of the sample response below:
+                 3. Follow ONLY the format of the sample response below. Do not add anything else to your response:
 
                  SAMPLE RESPONSE:
                  * You both studied in Stanford
                  * You both had highschool in New York
-                 * You both have Chemical Engineering degrees"""
+                 * You both have Chemical Engineering degrees
+                 
+                RESPONSE:"""
     
 
         school_response = get_gpt_response(school_commonalities_prompt)
@@ -430,12 +432,14 @@ elif output_type == 'Meeting Bio':
                  Perform the following action:
                  1. Help me to prepare for this meeting by checking if there are any shared work/company connections. Look for details like the current company, previous companies, industries, etc. 
                  2. If there are any shared work/company connections, provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info.
-                 3. Follow the format of the sample response below:
+                 3. Follow ONLY the format of the sample response below. Do not add anything else to your response:
 
                  SAMPLE RESPONSE:
                  * You both worked at Google
                  * You both have experience as a junior developer
-                 * You both worked in the Health industry for more than 5 years"""
+                 * You both worked in the Health industry for more than 5 years
+                 
+                RESPONSE:"""
 
         work_response = get_gpt_response(work_commonalities_prompt)
         work_content = work_response['choices'][0]['message']['content']
@@ -449,12 +453,15 @@ elif output_type == 'Meeting Bio':
                  Perform the following action:
                  1. Help me to prepare for this meeting by checking if there are any commonalities between me and the researched person's investments/advising gigs. Do not include work or school similarities e.g. going to the same schools, working in the same companies, etc. Focus on our investments, as well as instances where we advised startups/early-stage companies.
                  2. Provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info.
-                 3. Follow the format of the sample response below:
+                 3. Follow ONLY the format of the sample response below. Do not add anything else to your response:
 
                  SAMPLE RESPONSE:
                  * You both invested in MasterClass
                  * You both prefer to invest in pre-seed/seed stage startups
-                 * You have both invested in the FinTech industry"""
+                 * You have both invested in the FinTech industry
+
+                RESPONSE:"""
+
 
         investment_response = get_gpt_response(investment_commonalities_prompt)
         investment_content = investment_response['choices'][0]['message']['content']
@@ -468,14 +475,16 @@ elif output_type == 'Meeting Bio':
                  Perform the following action:
                  1. Help me to prepare for this meeting by checking if there are any commonalities between me and the researched person. Do not include work or school similarities e.g. going to the same schools, working in the same companies, etc. Focus on other non work/education similarities, as well as non-obvious similarities that we may have. An example of this is if we share similar interests, or if we have both visited a specific country before.
                  2. If there are any other non work/school commonalities, provide a bullet point describing each connection. Limit to 3-5 bullet points only. Only add bullet points with your answers. Write 'None' if you cannot find any relevant info.
-                 3. Follow the format of the sample response below:
+                 3. Follow ONLY the format of the sample response below. Do not add anything else to your response:
 
                  SAMPLE RESPONSE:
                  * You both are interested in AI and Automations
                  * You both love to travel to Europe
-                 * You have both hiked Mt. Everest"""
-        
+                 * You have both hiked Mt. Everest
 
+                RESPONSE:"""
+
+    
         other_response = get_gpt_response(other_commonalities_prompt)
         other_content = other_response['choices'][0]['message']['content']
 
