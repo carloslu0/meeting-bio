@@ -212,7 +212,7 @@ with st.sidebar:
         st.markdown("Have a meeting coming up? I bet they are on LinkedIn or YouTube or the web. This tool is meant to help you generate \
                 a meeting bio based off of their data on the web, or topics they've recently talked about.\
                 \n\nThis tool is powered by [BeautifulSoup](https://beautiful-soup-4.readthedocs.io/en/latest/#) [markdownify](https://pypi.org/project/markdownify/), [LangChain](https://langchain.com/) and [OpenAI](https://openai.com). \
-                \n\nMa.Forked from [@GregKamradt's](https://twitter.com/GregKamradt) repo on [LLM Interview Research Assistants](https://github.com/gkamradt/globalize-text-streamlit/blob/main/main.py)")
+                \n\nForked from [@GregKamradt's](https://twitter.com/GregKamradt) repo on [LLM Interview Research Assistants](https://github.com/gkamradt/globalize-text-streamlit/blob/main/main.py)")
 
 # Initialize session state variables
 if 'personal_info_keys' not in st.session_state:
@@ -235,11 +235,6 @@ if 'personal_linkedin_data_json' not in st.session_state:
 # Personal Information section
 if output_type == 'Personal Information':
     st.markdown("# Personal Information")
-    if st.checkbox("Use url", value=True):
-        add_logo("https://www.dropbox.com/scl/fi/ue9vx0lxhdlobqecbyju2/Artboard-1-copy-11-100.jpg?dl=0&rlkey=71awmkvpmbj2dndji4jq9dn7c", height=300)
-    else:
-        add_logo("http://placekitten.com/120/120")  
-
     
 
     rain(
@@ -290,15 +285,11 @@ if output_type == 'Personal Information':
 # Meeting Bio section
 elif output_type == 'Meeting Bio':
     st.markdown("# Meeting Bio")
-    if st.checkbox("Switch to cat logo", value=True):
-        add_logo("https://www.dropbox.com/scl/fi/ue9vx0lxhdlobqecbyju2/Artboard-1-copy-11-100.jpg?dl=0&rlkey=71awmkvpmbj2dndji4jq9dn7c", height=300)
-    else:
-        add_logo("http://placekitten.com/120/120")
 
     rain(
         emoji="📚",
         font_size=40,
-        falling_speed=4,
+        falling_speed=3,
         animation_length="infinite",
     )
 
