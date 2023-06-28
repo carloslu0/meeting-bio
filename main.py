@@ -561,6 +561,6 @@ elif output_type == 'Meeting Bio':
         # School History
         st.markdown(f"##### 🎓 Education")
         try:
-            st.write(f"* {get_value(data_dict['education'][0]['field_of_study'], ' ')} @ {get_value(data_dict['education'][0]['school'], ' ')} ({get_value(data_dict['education'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['year'], ' ')}) ")
+            st.write(f"* {get_value(data_dict['education'][0]['degree_name'], ' ')}, {get_value(data_dict['education'][0]['field_of_study'], ' ')} @ {get_value(data_dict['education'][0]['school'], ' ')} ({get_value(data_dict['education'][0]['starts_at']['month'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['day'], ' ')}/{get_value(data_dict['education'][0]['starts_at']['year'], ' ')}) ")
         except IndexError:
             st.write("No educational background provided")
