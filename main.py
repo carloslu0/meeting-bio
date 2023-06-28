@@ -526,9 +526,9 @@ elif output_type == 'Meeting Bio':
 
         # Personal Links
 
-        st.markdown("###### Personal Links")
+        st.markdown(f"###### Personal Links")
         st.markdown(f"* [LinkedIn](https://linkedin.com/in/{get_value(data_dict['public_identifier'], ' ')})")
-        st.markdown(f"* [Twitter](https://www.twitter.com/", ' ')
+        st.markdown(f"* [Twitter](https://www.twitter.com/)")
 
         # Company Links
         st.markdown("###### Company Links")
