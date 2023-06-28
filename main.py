@@ -134,16 +134,16 @@ def get_linkedin_data(api_key, linkedin_url, fallback_to_cache='on-error', use_c
         raise Exception(f'Request failed with status code {response.status_code}: {response.text}')
 
 #Create GPT3.5-turbo completion helper function    
-def get_gpt4_response(prompt):
-    gpt4_response = openai.ChatCompletion.create(  
-        model="gpt-4",
+def get_gpt_response(prompt):
+    gpt_response = openai.ChatCompletion.create(  
+        model="gpt-3.5-turbo-16k",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user",  
              "content": prompt}  
         ]
     )
-    return gpt4_response
+    return gpt_response
 
 #Create JSON to text helper function for entire personal information section
 def convert_personal_info_to_text(personal_info_keys, personal_info_json_str):
@@ -379,7 +379,7 @@ elif output_type == 'Meeting Bio':
 
                 Description: ```{data_dict['summary']}```"""
 
-        linkedin_response = get_gpt4_response(linkedin_summary_prompt)
+        linkedin_response = get_gpt_response(linkedin_summary_prompt)
         linkedin_content = linkedin_response['choices'][0]['message']['content']
 
     # Initialize the session state if not set
@@ -417,7 +417,7 @@ elif output_type == 'Meeting Bio':
                  * You both have Chemical Engineering degrees"""
     
 
-        school_response = get_gpt4_response(school_commonalities_prompt)
+        school_response = get_gpt_response(school_commonalities_prompt)
         school_content = school_response['choices'][0]['message']['content']
 
 
@@ -437,7 +437,7 @@ elif output_type == 'Meeting Bio':
                  * You both have experience as a junior developer
                  * You both worked in the Health industry for more than 5 years"""
 
-        work_response = get_gpt4_response(work_commonalities_prompt)
+        work_response = get_gpt_response(work_commonalities_prompt)
         work_content = work_response['choices'][0]['message']['content']
 
         investment_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
@@ -456,7 +456,7 @@ elif output_type == 'Meeting Bio':
                  * You both prefer to invest in pre-seed/seed stage startups
                  * You have both invested in the FinTech industry"""
 
-        investment_response = get_gpt4_response(investment_commonalities_prompt)
+        investment_response = get_gpt_response(investment_commonalities_prompt)
         investment_content = investment_response['choices'][0]['message']['content']
 
         other_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
@@ -476,7 +476,7 @@ elif output_type == 'Meeting Bio':
                  * You have both hiked Mt. Everest"""
         
 
-        other_response = get_gpt4_response(other_commonalities_prompt)
+        other_response = get_gpt_response(other_commonalities_prompt)
         other_content = other_response['choices'][0]['message']['content']
 
     
