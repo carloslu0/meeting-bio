@@ -170,7 +170,7 @@ def convert_json_to_text(json_str):
 # Prompts
 response = """
         Your goal is to generate a a concise summary that would prepare someone to talk to this person.
-        Please limit your answer to 2 paragraphs, with 80-100 words per paragraph. 
+        Please limit your answer to 1 paragraph of 80-100 words.
         """
 
 map_prompt = """You are a helpful AI bot that aids a user in research.
@@ -412,7 +412,6 @@ elif output_type == 'Meeting Bio':
                  3. Follow the format of the sample response below:
 
                  SAMPLE RESPONSE:
-                 Shared School Connections:
                  * You both studied in Stanford
                  * You both had highschool in New York
                  * You both have Chemical Engineering degrees"""
@@ -434,7 +433,6 @@ elif output_type == 'Meeting Bio':
                  3. Follow the format of the sample response below:
 
                  SAMPLE RESPONSE:
-                 Shared Work Connections:
                  * You both worked at Google
                  * You both have experience as a junior developer
                  * You both worked in the Health industry for more than 5 years"""
@@ -454,7 +452,6 @@ elif output_type == 'Meeting Bio':
                  3. Follow the format of the sample response below:
 
                  SAMPLE RESPONSE:
-                 Shared Investments:
                  * You both invested in MasterClass
                  * You both prefer to invest in pre-seed/seed stage startups
                  * You have both invested in the FinTech industry"""
@@ -474,7 +471,6 @@ elif output_type == 'Meeting Bio':
                  3. Follow the format of the sample response below:
 
                  SAMPLE RESPONSE:
-                 Shared Investments:
                  * You both are interested in AI and Automations
                  * You both love to travel to Europe
                  * You have both hiked Mt. Everest"""
