@@ -9,7 +9,8 @@ from langchain.prompts import PromptTemplate
 import streamlit as st    
 from streamlit_extras.customize_running import center_running
 from streamlit_extras.let_it_rain import rain
-from streamlit_extras.app_logo import add_logo
+from streamlit_extras.buy_me_a_coffee import button
+from annotated_text import annotated_text, annotation
 
 
 # APIs
@@ -236,7 +237,7 @@ if 'personal_linkedin_data_json' not in st.session_state:
 if output_type == 'Personal Information':
     st.markdown("# Personal Information")
     st.markdown("### Enter your client's information here:")
-    st.markdown("#### Hit the 'Save Personal Information' button below once you finish entering all client information")
+    annotated_text(annotation("Hit the 'Save Personal Information' button below once you finish entering all client information", color="#8ef", border="1px dashed red"))
     
 
     rain(
@@ -288,6 +289,7 @@ if output_type == 'Personal Information':
 elif output_type == 'Meeting Bio':
     st.markdown("# Meeting Bio")
     st.markdown("### Enter the details of the person you are preparing a bio for:")
+    
 
     rain(
         emoji="📚",
