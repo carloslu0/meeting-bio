@@ -500,7 +500,7 @@ elif output_type == 'Meeting Bio':
             st.markdown(f"###### Name")
             st.write(data_dict.get("full_name", ""))
             st.markdown(f"###### Location")
-            st.write((data_dict.get("city", "")  + ", " + data_dict.get("state", "") + ", " + data_dict.get("country", "")).strip(", "))
+            st.write((str(data_dict.get("city", ""))  + ", " + str(data_dict.get("state", "")) + ", " + str(data_dict.get("country", ""))).strip(", "))
             st.markdown(f"###### Occupation")
             st.write(data_dict.get("occupation", ""))
             st.markdown(f"###### LinkedIn Bio")
