@@ -236,6 +236,7 @@ if 'personal_linkedin_data_json' not in st.session_state:
 if output_type == 'Personal Information':
     st.markdown("# Personal Information")
     st.markdown("### Enter your client's information here:")
+    st.markdown("#### Hit the 'Save Personal Information' button below once you finish entering all client information")
     
 
     rain(
