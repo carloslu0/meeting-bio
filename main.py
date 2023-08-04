@@ -8,8 +8,6 @@ from langchain.prompts import PromptTemplate
 # Streamlit 
 import streamlit as st    
 from streamlit_extras.customize_running import center_running
-from streamlit_extras.let_it_rain import rain
-from streamlit_extras.buy_me_a_coffee import button
 from annotated_text import annotated_text, annotation
 
 
@@ -29,26 +27,15 @@ import json
 import requests   
 import os   
 from dotenv import load_dotenv  
-
-
 load_dotenv()
 
 
 # Get your API keys set
-TWITTER_API_KEY = os.getenv('TWITTER_API_KEY')
-TWITTER_API_SECRET = os.getenv('TWITTER_API_SECRET')
-TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
-TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
-if "openai_api_key" in st.secrets:
-    OPENAI_API_KEY = st.secrets["openai_api_key"]
-    openai.api_key = st.secrets["openai_api_key"]
-else:
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    openai.api_key = os.getenv("OPENAI_API_KEY")
-if "proxycurl_api_key" in st.secrets:
-    PROXYCURL_API_KEY = st.secrets["proxycurl_api_key"]
-else:
-    PROXYCURL_API_KEY = os.getenv('PROXYCURL_API_KEY')
+OPENAI_API_KEY = st.secrets['OPENAI_API_KEY']
+PROXYCURL_API_KEY = st.secrets['PROXYCURL_API_KEY']
+ANTHROPIC_API_KEY = st.secrets('ANTHROPIC_API_KEY')
+
+
 
 # Load up your LLM
 def load_LLM(openai_api_key):
@@ -146,6 +133,19 @@ def get_gpt_response(prompt):
     )
     return gpt_response
 
+#Create Claude completion helper function
+def get_claude_response(prompt):
+    anthropic = Anthropic()
+    completion = anthropic.completions.create(
+        model = "claude-2",
+        max_tokens_to_sample=50000,
+        temperature = 0.5,
+        top_k = 1.0,
+        prompt=f"{HUMAN_PROMPT} {prompt} {AI_PROMPT}"
+    )
+    return completion.completion
+
+
 #Create JSON to text helper function for entire personal information section
 def convert_personal_info_to_text(personal_info_keys, personal_info_json_str):
     personal_info_parts = []
@@ -239,14 +239,6 @@ if output_type == 'Personal Information':
     st.markdown("### Enter your client's information here:")
     annotated_text(annotation("Hit the 'Save Personal Information' button below once you finish entering all client information", color="#8ef", border="1px dashed red"))
     
-
-    rain(
-        emoji="🎈",
-        font_size=35,
-        falling_speed=6,
-        animation_length="infinite",
-    )
-    
     col1, col2 = st.columns(2)
 
     with col1:
@@ -290,14 +282,6 @@ elif output_type == 'Meeting Bio':
     st.markdown("# Meeting Bio")
     st.markdown("### Enter the details of the person you are preparing a bio for:")
     
-
-    rain(
-        emoji="📚",
-        font_size=40,
-        falling_speed=3,
-        animation_length="infinite",
-    )
-
     col1, col2 = st.columns(2)
 
     with col1:
@@ -424,7 +408,7 @@ elif output_type == 'Meeting Bio':
                 RESPONSE:"""
     
 
-        school_response = get_gpt_response(school_commonalities_prompt)
+        school_response = get_claude_response(school_commonalities_prompt)
         school_content = school_response['choices'][0]['message']['content']
 
 
@@ -446,7 +430,7 @@ elif output_type == 'Meeting Bio':
                  
                 RESPONSE:"""
 
-        work_response = get_gpt_response(work_commonalities_prompt)
+        work_response = get_claude_response(work_commonalities_prompt)
         work_content = work_response['choices'][0]['message']['content']
 
         investment_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
@@ -468,7 +452,7 @@ elif output_type == 'Meeting Bio':
                 RESPONSE:"""
 
 
-        investment_response = get_gpt_response(investment_commonalities_prompt)
+        investment_response = get_claude_response(investment_commonalities_prompt)
         investment_content = investment_response['choices'][0]['message']['content']
 
         other_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
@@ -490,7 +474,7 @@ elif output_type == 'Meeting Bio':
                 RESPONSE:"""
 
     
-        other_response = get_gpt_response(other_commonalities_prompt)
+        other_response = get_claude_response(other_commonalities_prompt)
         other_content = other_response['choices'][0]['message']['content']
 
     
@@ -519,13 +503,13 @@ elif output_type == 'Meeting Bio':
 
         st.markdown(f"##### 👥 Commonalities")
         st.markdown(f"###### Shared School Connections")
-        st.write(school_content)
+        st.write(school_response)
         st.markdown(f"###### Shared Work Connections")
-        st.write(work_content)
+        st.write(work_response)
         st.markdown(f"###### Similar Investments")
-        st.write(investment_content)
+        st.write(investment_response)
         st.markdown(f"###### Other Commonalities")
-        st.write(other_content)
+        st.write(other_response)
 
         # Add the corresponding links
         st.markdown(f"##### 🌐 Links")
