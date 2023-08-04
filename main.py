@@ -368,8 +368,7 @@ elif output_type == 'Meeting Bio':
 
                 Description: ```{data_dict['summary']}```"""
 
-        linkedin_response = get_gpt_response(linkedin_summary_prompt)
-        linkedin_content = linkedin_response['choices'][0]['message']['content']
+        linkedin_response = get_claude_response(linkedin_summary_prompt)
 
     # Initialize the session state if not set
         if 'personal_info_keys' not in st.session_state:
@@ -409,7 +408,6 @@ elif output_type == 'Meeting Bio':
     
 
         school_response = get_claude_response(school_commonalities_prompt)
-        school_content = school_response['choices'][0]['message']['content']
 
 
         work_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
@@ -431,7 +429,6 @@ elif output_type == 'Meeting Bio':
                 RESPONSE:"""
 
         work_response = get_claude_response(work_commonalities_prompt)
-        work_content = work_response['choices'][0]['message']['content']
 
         investment_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
                  The second set, called 'researched person information', provides data of a person I will be meeting with.
@@ -453,7 +450,6 @@ elif output_type == 'Meeting Bio':
 
 
         investment_response = get_claude_response(investment_commonalities_prompt)
-        investment_content = investment_response['choices'][0]['message']['content']
 
         other_commonalities_prompt = f"""You are given two sets of data delimited by triple backticks. The first called 'personal information' provides my own personal details.
                  The second set, called 'researched person information', provides data of a person I will be meeting with.
@@ -475,8 +471,6 @@ elif output_type == 'Meeting Bio':
 
     
         other_response = get_claude_response(other_commonalities_prompt)
-        other_content = other_response['choices'][0]['message']['content']
-
     
 
         col3, col4 = st.columns(2)
