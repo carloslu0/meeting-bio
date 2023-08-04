@@ -4,6 +4,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate   
+from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
 
 # Streamlit 
 import streamlit as st    
