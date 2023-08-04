@@ -33,7 +33,7 @@ load_dotenv()
 # Get your API keys set
 OPENAI_API_KEY = st.secrets['OPENAI_API_KEY']
 PROXYCURL_API_KEY = st.secrets['PROXYCURL_API_KEY']
-ANTHROPIC_API_KEY = st.secrets('ANTHROPIC_API_KEY')
+ANTHROPIC_API_KEY = st.secrets['ANTHROPIC_API_KEY']
 
 
 
