@@ -1,9 +1,14 @@
-# NLP and ML  
+import json   
+import os
+import requests  
+
+# LangChain 
 from langchain import PromptTemplate   
 from langchain.chat_models import ChatOpenAI  
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
-from langchain.prompts import PromptTemplate   
+from langchain.prompts import PromptTemplate  
+from langchain.document_loaders import YoutubeLoader  
 from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
 
 # Streamlit 
@@ -12,23 +17,17 @@ from streamlit_extras.customize_running import center_running
 from annotated_text import annotated_text, annotation
 
 
-# APIs
-# OpenAI
+
 import openai       
 # YouTube  
-from langchain.document_loaders import YoutubeLoader 
+
 
 # Scraping   
 import requests   
 from bs4 import BeautifulSoup   
 from markdownify import markdownify as md    
 
-# Environment Variables
-import json   
-import requests   
-import os   
-from dotenv import load_dotenv  
-load_dotenv()
+ 
 
 
 # Get your API keys set
@@ -138,7 +137,7 @@ def get_gpt_response(prompt):
 def get_claude_response(prompt):
     anthropic = Anthropic()
     completion = anthropic.completions.create(
-        model = "claude-2",
+        model="claude-2",
         max_tokens_to_sample=50000,
         temperature = 0.5,
         top_k = 1.0,
